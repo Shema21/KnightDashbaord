@@ -1,0 +1,1555 @@
+{% extends "layouts/base.html" %}
+{% block title %} Dashboard {% endblock %}
+{% block stylesheets %}
+<style>
+  /* Base Styles */
+  canvas {
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0 auto;
+  }
+
+  .container-1 {
+    padding: 20px;
+  }
+
+  .box {
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .col-12 {
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .col-md-6 {
+      width: 48%;
+    }
+  }
+
+  /* Custom Styles */
+  #greeting-container {
+    margin: 20px;
+    font-size: 1.5em;
+  }
+
+  .card-value {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .positive-value {
+    color: #28a745;
+  }
+  
+  .negative-value {
+    color: #dc3545;
+  }
+  
+  .neutral-value {
+    color: #6c757d;
+  }
+  
+  .warning-value {
+    color: #ffc107;
+  }
+  
+  .card-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+  
+  .data-section {
+    margin-bottom: 2rem;
+    scroll-margin-top: 20px;
+  }
+  
+  @media screen and (max-width:300px){
+    .data-section{
+      width: 250px;
+    }
+
+    .lastupdated{
+      width: 250px;
+    }
+    #manual-refresh{
+      width: 130px;
+      font-size: 12px
+    }
+    .chart-class{
+      width: 250px;
+    }
+    .apikey_class{
+      width: 250px;
+    }
+    
+  }
+
+    @media screen and (max-width:400px){
+    .data-section{
+      width: 350px;
+    }
+
+    .lastupdated{
+      width: 350px;
+    }
+    #manual-refresh{
+      width: 130px;
+      font-size: 12px
+    }
+    .chart-class{
+      width: 350px;
+    }
+    .apikey_class{
+      width: 350px;
+    }
+    
+  }
+
+
+   @media screen and (max-width:551px){
+    .data-section{
+      width: 450px;
+    }
+
+    .lastupdated{
+      width: 450px;
+    }
+    #manual-refresh{
+      width: 130px;
+    }
+    .chart-class{
+      width: 450px;
+    }
+    .apikey_class{
+      width: 450px;
+    }
+    
+  }
+
+
+
+
+  .section-title {
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    color: #495057;
+  }
+  
+  .trade-card {
+    transition: transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .trade-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .symbol-badge {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .status-badge {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .uptrend {
+    color: #28a745;
+  }
+
+  .downtrend {
+    color: #dc3545;
+  }
+
+  .neutral-trend {
+    color: #6c757d;
+  }
+
+  .oversold {
+    color: #28a745;
+  }
+
+  .overbought {
+    color: #dc3545;
+  }
+
+  .market-condition-card {
+    border-left: 4px solid #dee2e6;
+    transition: all 0.3s ease;
+  }
+
+  .market-condition-card:hover {
+    border-left-color: #007bff;
+  }
+
+  .scroll-to-section {
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .scroll-to-section:hover {
+    color: #007bff;
+  }
+
+  #refresh-indicator {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    display: none;
+    background: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+
+  .alert-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    min-width: 300px;
+  }
+
+  /* Trade status alert */
+  .trade-status-alert {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    border-radius: 0;
+  }
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="layout-container">
+  <div class="layout-page" style="padding-top: 2px;">
+    <div class="content-wrapper">
+      <div class="container-xxl flex-grow-1 container-p-y">
+
+        <div id="trade-status-container" class="trade-status-alert alert alert-danger mb-0" style="display: none;">
+        </div>
+
+        <div id="greeting-container"></div>
+        
+        <div class="d-flex justify-content-between align-items-center mb-4 lastupdated">
+          <div class="alert alert-info mb-0">
+            <span id="last-updated"></span>
+          </div>
+          <button id="manual-refresh" class="btn btn-primary">
+            <i class="fas fa-sync-alt"></i> Refresh Now
+          </button>
+        </div>
+
+
+
+        <div class="data-section" id="account-summary">
+          <div class="row mb-4">
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Balance</div>
+                  <div class="card-value" id="balance-value">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Equity</div>
+                  <div class="card-value" id="equity-value">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Margin Level</div>
+                  <div class="card-value" id="margin-level-value">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Daily P&L</div>
+                  <div class="card-value" id="daily-pnl-value">--</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Monthly P&L</div>
+                  <div class="card-value" id="monthly-pnl-value">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Auto Trading</div>
+                  <div class="card-value" id="auto-trading-value">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Best Trade</div>
+                  <div class="card-value" id="best-trade-value">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Worst Trade</div>
+                  <div class="card-value" id="worst-trade-value">--</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="data-section" id="open-trades-section" style="max-height: 750px;">
+          <h4 class="section-title">Open Trades</h4>
+          <div class="mb-2">
+            <span id="open-trades-pnl-summary" class="badge bg-secondary fs-6">
+              Total P&L: $0.00
+            </span>
+          </div>
+          <div class="table-wrapper-rounded table-responsive mt-3">
+            <table class="table table-borderless row-border-only table-hover header-bg" id="open-trades-table">
+              <thead>
+                <tr>
+                  <th>Symbol</th>
+                  <th>Type</th>
+                  <th>Size</th>
+                  <th>Open Price</th>
+                  <th>Current Price</th>
+                  <th>P&L</th>
+                  <th>Swap</th>
+                  <th>Stop Loss</th>
+                  <th>Take Profit</th>
+                  <th>Open Time</th>
+                  <th>Comment</th>
+                </tr>
+              </thead>
+              <tbody id="open-trades-table-body">
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="data-section" id="performance-metrics">
+          <h4 class="section-title">Performance Metrics</h4>
+          
+          <div class="row mb-4">
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Win Rate</div>
+                  <div class="card-value" id="win-rate-value">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Loss Rate</div>
+                  <div class="card-value" id="loss-rate-value">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Profit Factor</div>
+                  <div class="card-value" id="profit-factor-value">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Expectancy</div>
+                  <div class="card-value" id="expectancy-value">--</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Avg Win Trade</div>
+                  <div class="card-value" id="avg-win-value">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Avg Loss Trade</div>
+                  <div class="card-value" id="avg-loss-value">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Total Profit</div>
+                  <div class="card-value" id="total-profit-value">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Drawdown</div>
+                  <div class="card-value" id="drawdown-value">--</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Risk:Reward Ratio</div>
+                  <div class="card-value" id="rrr-value">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Sharpe Ratio</div>
+                  <div class="card-value" id="sharpe-ratio-value">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Sortino Ratio</div>
+                  <div class="card-value" id="sortino-ratio-value">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-3">
+              <div class="card card-border-shadow-primary h-100">
+                <div class="card-body">
+                  <div class="card-label">Win Streak</div>
+                  <div class="card-value" id="win-streak-value">--</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-xxl-6">
+            <div class="chart-class card-100">
+              <div class="card-body">
+                <h5 class="fw-bold text-center">Equity Curve</h5>
+                <canvas id="equityCurveChart" style="height: 400px;"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xxl-6">
+            <div class="chart-class card-100">
+              <div class="card-body">
+                <h5 class="fw-bold text-center">Win/Loss Distribution</h5>
+                <canvas id="winLossDonutChart" style="height: 400px;"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xxl-6">
+            <div class="chart-class card-100">
+              <div class="card-body">
+                <h5 class="fw-bold text-center">Monthly Performance</h5>
+                <canvas id="monthlyPerformanceChart" style="height: 400px;"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xxl-6">
+            <div class="chart-class card-100">
+              <div class="card-body">
+                <h5 class="fw-bold text-center">Symbol Performance</h5>
+                <canvas id="symbolPerformanceChart" style="height: 400px;"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="section-title">Trade History</h4>
+        <div class="data-section" id="trade-history" style="max-height: 500px; overflow-y: auto;">
+          <div class="card shadow-sm">
+            <div class="table-responsive">
+              <table class="table table-striped table-hover align-middle text-center">
+                <thead>
+                  <tr>
+                    <th>Symbol</th>
+                    <th>Time</th>
+                    <th>Type</th>
+                    <th>Size</th>
+                    <th>Price</th>
+                    <th>Profit</th>
+                  </tr>
+                </thead>
+                <tbody id="history-trades-container">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="section-title">Market Conditions</h4>
+        <div class="data-section" id="market-conditions" style="max-height: 600px; overflow-y: auto;">
+          <div class="table-responsive table-wrapper-rounded">
+            <table class="table table-hover table-borderless header-bg mb-0">
+              <thead class="thead-light sticky-top">
+                <tr>
+                  <th>Symbol</th>
+                  <th>ATR</th>
+                  <th>RSI</th>
+                  <th>Momentum State</th>
+                  <th>MA Fast</th>
+                  <th>MA Slow</th>
+                  <th>Trend</th>
+                  <th>Range (Low - High)</th>
+                </tr>
+              </thead>
+              <tbody id="market-conditions-container">
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card shadow-sm mt-4">
+          <div class="apikey_class card-header bg-secondary text-white">
+            🔑 Your API Key : {{ api_key }} <button class="btn btn-primary btn-sm" onclick="copyApiKey()">Copy</button>
+          </div>
+        </div>
+        
+        <script>
+          function copyApiKey() {
+            const tempInput = document.createElement("input");
+            tempInput.value = "{{ api_key }}";
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            alert("API key copied to clipboard!");
+          }
+        </script>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Overlay -->
+<div class="layout-overlay layout-menu-toggle"></div>
+<div class="drag-target"></div>
+
+<!-- Chart Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/luxon@3.0.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.2.0"></script>
+
+<!-- Greeting Script -->
+<script>
+  const currentUser = {
+    firstname: "",
+    lastname: "",
+    username: "Darkone"
+  };
+
+  const hour = new Date().getHours();
+  const greetingText = hour < 12 ? "Good Morning" : hour < 18 ? "Good Afternoon" : "Good Evening";
+
+  const fullName = (!currentUser.firstname || currentUser.firstname.toLowerCase() === "n/a") &&
+                   (!currentUser.lastname || currentUser.lastname.toLowerCase() === "n/a")
+                   ? currentUser.username
+                   : `${currentUser.firstname} ${currentUser.lastname}`;
+
+  document.getElementById("greeting-container").innerHTML = `
+    <div class="row"><h4>${greetingText}, ${fullName}!</h4></div>`;
+</script>
+
+<script>
+  // Parse the MT5 data
+  let MT5_DATA = {{ mt5_data | tojson | safe }};
+  console.log("MT5_DATA:", MT5_DATA);
+  let LAST_UPDATED = "{{ last_updated }}";
+
+  if (LAST_UPDATED && LAST_UPDATED !== "Never") {
+    const dateObj = new Date(LAST_UPDATED);
+
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    };
+
+    LAST_UPDATED = `Last updated: ${dateObj.toLocaleString("en-US", options)}`;
+  } else {
+    LAST_UPDATED = "Last updated: Never";
+  }
+  
+  // Configuration
+  const REFRESH_INTERVAL = 30000; // 30 seconds
+  let refreshInterval;
+  let retryCount = 0;
+  const MAX_RETRIES = 3;
+  const RETRY_DELAY = 5000; // 5 seconds
+  let isRefreshing = false;
+
+  // Heartbeat storage
+  const HEARTBEAT_KEY = 'mt5_heartbeats';
+  const MAX_HEARTBEATS = 10; // Store only 10 most recent heartbeats
+
+  // Dashboard sections for navigation
+  const DASHBOARD_SECTIONS = [
+    { id: 'account-summary', name: 'Account Summary', icon: 'bx-wallet' },
+    { id: 'open-trades-section', name: 'Open Trades', icon: 'bx-trending-up' },
+    { id: 'performance-metrics', name: 'Performance', icon: 'bx-bar-chart-alt' },
+    { id: 'risk-metrics', name: 'Risk Metrics', icon: 'bx-shield' },
+    { id: 'trade-history', name: 'Trade History', icon: 'bx-history' },
+    { id: 'market-conditions', name: 'Market Conditions', icon: 'bx-globe' },
+    { id: 'equityCurveChart', name: 'Equity Curve', icon: 'bx-line-chart' },
+    { id: 'winLossDonutChart', name: 'Win/Loss', icon: 'bx-pie-chart' },
+    { id: 'monthlyPerformanceChart', name: 'Monthly Perf', icon: 'bx-calendar' },
+    { id: 'symbolPerformanceChart', name: 'Symbol Perf', icon: 'bx-dollar' }
+  ];
+
+  // Initialize dashboard navigation menu
+  function initializeDashboardNavigation() {
+    const menuContainer = document.querySelector('.menu-inner.py-1');
+    if (!menuContainer) return;
+
+    // Create dashboard sections menu item
+    const sectionsMenuItem = document.createElement('li');
+    sectionsMenuItem.className = 'menu-item menu-submenu';
+    sectionsMenuItem.innerHTML = `
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon icon-base bx bx-navigation"></i>
+        <div data-i18n="Dashboard Sections">Dashboard Sections</div>
+      </a>
+      <ul class="menu-sub">
+        ${DASHBOARD_SECTIONS.map(section => `
+          <li class="menu-item">
+            <a href="#${section.id}" class="menu-link scroll-to-section" data-section="${section.id}">
+              <i class="menu-icon icon-base bx ${section.icon}"></i>
+              <div>${section.name}</div>
+            </a>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+
+    // Insert after the first menu item (Dashboard)
+    const firstMenuItem = document.querySelector('.menu-inner.py-1 > .menu-item');
+    if (firstMenuItem) {
+      firstMenuItem.insertAdjacentElement('afterend', sectionsMenuItem);
+    } else {
+      menuContainer.prepend(sectionsMenuItem);
+    }
+
+    // Add click handlers for smooth scrolling
+    document.querySelectorAll('.scroll-to-section').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const sectionId = this.getAttribute('data-section');
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+          // Add highlight effect
+          element.classList.add('highlight-section');
+          setTimeout(() => {
+            element.classList.remove('highlight-section');
+          }, 2000);
+        }
+      });
+    });
+  }
+
+  // Add CSS for highlight effect
+  function addHighlightStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+      .highlight-section {
+        animation: highlight-fade 2s ease-out;
+      }
+      @keyframes highlight-fade {
+        0% { background-color: rgba(0, 123, 255, 0.2); }
+        100% { background-color: transparent; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Format currency values
+  function formatCurrency(value) {
+    return new Intl.NumberFormat('en-US', { 
+      style: 'currency', 
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2 
+    }).format(value);
+  }
+  
+  // Format percentage values
+  function formatPercentage(value) {
+    return value.toFixed(2) + '%';
+  }
+  
+  // Get value class based on positive/negative
+  function getValueClass(value) {
+    if (value > 0) return 'positive-value';
+    if (value < 0) return 'negative-value';
+    return 'neutral-value';
+  }
+
+  // Get trend class based on trend state
+  function getTrendClass(state) {
+    if (state.toLowerCase().includes('up')) return 'uptrend';
+    if (state.toLowerCase().includes('down')) return 'downtrend';
+    return 'neutral-trend';
+  }
+
+  // Get momentum class based on RSI state
+  function getMomentumClass(state) {
+    if (state.toLowerCase() === 'oversold') return 'oversold';
+    if (state.toLowerCase() === 'overbought') return 'overbought';
+    return 'neutral-trend';
+  }
+
+  // Initialize dashboard with partial updates
+  function initializeDashboard(changedSections = null) {
+    // Always update last updated time
+    document.getElementById('last-updated').textContent = LAST_UPDATED;
+    
+    // Update trade status if exists
+    if (MT5_DATA.tradeStatus) {
+      const statusContainer = document.getElementById('trade-status-container');
+      const statusData = MT5_DATA.tradeStatus;
+      
+      if (statusData && statusData.message) {
+        statusContainer.style.display = 'block';
+        statusContainer.className = `trade-status-alert alert alert-danger mb-0`;
+        statusContainer.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <strong>${statusData.status || 'Trade Status'}</strong>
+              <div class="small">${statusData.message}</div>
+            </div>
+            <button type="button" class="btn-close" onclick="this.parentElement.parentElement.style.display='none'"></button>
+          </div>
+        `;
+      } else {
+        statusContainer.style.display = 'none';
+      }
+    }
+    
+    // Update account summary if needed
+    if (!changedSections || changedSections.includes('account')) {
+      const accountData = MT5_DATA.accountDetails;
+
+      document.getElementById('balance-value').textContent = formatCurrency(accountData.Balance);
+      document.getElementById('equity-value').textContent = formatCurrency(accountData.Equity);
+
+      const marginLevelElement = document.getElementById('margin-level-value');
+      marginLevelElement.textContent = formatPercentage(accountData.MarginLevel);
+      marginLevelElement.className = 'card-value ' +
+        (accountData.MarginLevel > 1000 ? 'positive-value' :
+          accountData.MarginLevel > 500 ? 'warning-value' : 'negative-value');
+
+      const dailyPnlElement = document.getElementById('daily-pnl-value');
+      dailyPnlElement.textContent = formatCurrency(accountData.DailyPnL);
+      dailyPnlElement.className = 'card-value ' + getValueClass(accountData.DailyPnL);
+
+      const monthlyPnlElement = document.getElementById('monthly-pnl-value');
+      monthlyPnlElement.textContent = formatCurrency(accountData.MonthlyPnL);
+      monthlyPnlElement.className = 'card-value ' + getValueClass(accountData.MonthlyPnL);
+
+      const autoTradingElement = document.getElementById('auto-trading-value');
+      autoTradingElement.textContent = accountData.AutoTrading === "1" ? "Active" : "Inactive";
+      autoTradingElement.className = 'card-value ' +
+        (accountData.AutoTrading === "1" ? 'positive-value' : 'negative-value');
+
+      const bestTradeElement = document.getElementById('best-trade-value');
+      bestTradeElement.textContent = formatCurrency(accountData.BestTrade);
+      bestTradeElement.className = 'card-value ' + getValueClass(accountData.BestTrade);
+
+      const worstTradeElement = document.getElementById('worst-trade-value');
+      worstTradeElement.textContent = formatCurrency(accountData.WorstTrade);
+      worstTradeElement.className = 'card-value ' + getValueClass(accountData.WorstTrade);
+    }
+   
+    if (!changedSections || changedSections.includes('openTrades')) {
+      const openTradesBody = document.getElementById('open-trades-table-body');
+      const pnlSummary = document.getElementById('open-trades-pnl-summary');
+      openTradesBody.innerHTML = '';
+      let totalPnl = 0;
+
+      const openTrades = MT5_DATA.openTrades?.openTrades || [];
+
+      if (openTrades.length > 0) {
+        openTrades.forEach(trade => {
+          totalPnl += parseFloat(trade.ProfitLoss || 0);
+          const profitClass = trade.ProfitLoss >= 0 ? 'text-success' : 'text-danger';
+          const typeBadge = trade.Type === 'Buy'
+            ? `<span class="badge bg-success">Buy <i class="fas fa-arrow-up"></i></span>`
+            : `<span class="badge bg-danger">Sell <i class="fas fa-arrow-down"></i></span>`;
+
+          const row = `
+            <tr>
+              <td><span class="badge bg-primary">${trade.Symbol}</span></td>
+              <td>${typeBadge}</td>
+              <td>${trade.Size}</td>
+              <td>${trade.OpenPrice}</td>
+              <td>${trade.CurrentPrice}</td>
+              <td class="${profitClass}">${formatCurrency(trade.ProfitLoss)}</td>
+              <td>${trade.Swap}</td>
+              <td>${trade.StopLoss}</td>
+              <td>${trade.TakeProfit}</td>
+              <td><small>${trade.OpenTime}</small></td>
+              <td><small>${trade.Comment || '—'}</small></td>
+            </tr>
+          `;
+          openTradesBody.innerHTML += row;
+        });
+
+        // Update badge with total P&L and color
+        pnlSummary.textContent = `Total P&L: ${formatCurrency(totalPnl)}`;
+        pnlSummary.className = 'badge fs-6 ' +
+          (totalPnl > 0 ? 'bg-success' : totalPnl < 0 ? 'bg-danger' : 'bg-secondary');
+
+      } else {
+        openTradesBody.innerHTML = `
+          <tr>
+            <td colspan="11">
+              <div class="alert alert-info m-0">
+                <i class="fas fa-info-circle"></i> No open trades currently.
+              </div>
+            </td>
+          </tr>`;
+
+        pnlSummary.textContent = `Total P&L: $0.00`;
+        pnlSummary.className = 'badge fs-6 bg-secondary';
+      }
+    }
+
+
+    if (!changedSections || changedSections.includes('metrics')) {
+      const m = MT5_DATA.accountMetrics;
+
+      // % Win Rate
+      document.getElementById('win-rate-value').textContent = formatPercentage(m.ProfitTradePercentage);
+      document.getElementById('win-rate-value').className = 'card-value ' + (m.ProfitTradePercentage > 50 ? 'positive-value' : 'negative-value');
+
+      // % Loss Rate
+      document.getElementById('loss-rate-value').textContent = formatPercentage(m.LossTradePercentage);
+
+      // Profit Factor
+      document.getElementById('profit-factor-value').textContent = m.ProfitFactor.toFixed(2);
+      document.getElementById('profit-factor-value').className = 'card-value ' +
+        (m.ProfitFactor > 1.5 ? 'positive-value' : m.ProfitFactor > 1 ? 'warning-value' : 'negative-value');
+
+      // Expectancy
+      document.getElementById('expectancy-value').textContent = formatCurrency(m.Expectancy);
+
+      // Avg Win & Loss
+      document.getElementById('avg-win-value').textContent = formatCurrency(m.AverageWinTrade);
+      document.getElementById('avg-loss-value').textContent = formatCurrency(m.AverageLossTrade);
+
+      // Total Profit
+      document.getElementById('total-profit-value').textContent = formatCurrency(m.TotalProfit);
+      document.getElementById('total-profit-value').className = 'card-value ' + getValueClass(m.TotalProfit);
+
+      // Max Drawdown
+      const drawdownText = `${formatCurrency(m.MaximumDrawdown)} (${m.MaximumDrawdownPercentage.toFixed(2)}%)`;
+      document.getElementById('drawdown-value').textContent = drawdownText;
+      document.getElementById('drawdown-value').className = 'card-value ' + getValueClass(-m.MaximumDrawdown);
+
+      // Risk:Reward
+      document.getElementById('rrr-value').textContent = m.RiskRewardRatio.toFixed(2);
+
+      // Sharpe & Sortino
+      document.getElementById('sharpe-ratio-value').textContent = m.SharpeRatio.toFixed(2);
+      document.getElementById('sortino-ratio-value').textContent = m.SortinoRatio.toFixed(2);
+
+      // Win Streak
+      document.getElementById('win-streak-value').textContent = `${m.CurrentWinStreak} / ${m.MaxWinStreak}`;
+    }
+
+
+
+    
+    if (!changedSections || changedSections.includes('history')) {
+      const historyTradesContainer = document.getElementById('history-trades-container');
+      historyTradesContainer.innerHTML = '';
+
+      const history = MT5_DATA.historyTrades || [];
+
+      if (history.length > 0) {
+        // ✅ Sort trades by time descending
+        history.sort((a, b) => new Date(b.Time) - new Date(a.Time));
+
+        history.forEach(trade => {
+          const profit = parseFloat(trade.Profit || 0);
+          const profitClass = profit > 0 ? 'badge bg-success' : (profit < 0 ? 'badge bg-danger' : 'badge bg-secondary');
+          const typeClass = trade.Type === 'Buy' ? 'badge bg-success' : 'badge bg-danger';
+
+          const row = `
+            <tr>
+              <td><span class="text-primary">${trade.Symbol}</span></td>
+              <td><small>${trade.Time}</small></td>
+              <td><span class="${typeClass}">${trade.Type}</span></td>
+              <td>${trade.Size}</td>
+              <td>${trade.Price}</td>
+              <td><span class="${profitClass}">${formatCurrency(profit)}</span></td>
+            </tr>
+          `;
+          historyTradesContainer.innerHTML += row;
+        });
+      } else {
+        historyTradesContainer.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-muted text-center">No trade history available</td>
+          </tr>`;
+      }
+    }
+
+    // Helpers
+    function getTrendBadgeClass(state) {
+      return state === "Uptrend" ? 'badge bg-success' :
+            state === "Downtrend" ? 'badge bg-danger' : 'badge bg-secondary';
+    }
+
+    function getMomentumBadgeClass(state) {
+      return state === "Overbought" ? 'badge bg-danger' :
+            state === "Oversold" ? 'badge bg-success' : 'badge bg-secondary';
+    }
+
+    // Update Market Conditions Table
+    if (!changedSections || changedSections.includes('market')) {
+      const marketConditionsContainer = document.getElementById('market-conditions-container');
+      marketConditionsContainer.innerHTML = '';
+
+      if (MT5_DATA.marketConditions && MT5_DATA.marketConditions.length > 0) {
+        MT5_DATA.marketConditions.forEach(symbol => {
+          const row = `
+            <tr>
+              <td><strong>${symbol.Symbol}</strong></td>
+              <td>${symbol.volatility.ATR}</td>
+              <td>${symbol.momentum.RSI}</td>
+              <td><span class="${getMomentumBadgeClass(symbol.momentum.State)}">${symbol.momentum.State}</span></td>
+              <td>${symbol.trend.MA_Fast}</td>
+              <td>${symbol.trend.MA_Slow}</td>
+              <td><span class="${getTrendBadgeClass(symbol.trend.State)}">${symbol.trend.State}</span></td>
+              <td>${symbol.levels.LowestLow_Last_100_Bars} - ${symbol.levels.HighestHigh_Last_100_Bars}</td>
+            </tr>
+          `;
+          marketConditionsContainer.innerHTML += row;
+        });
+      } else {
+        marketConditionsContainer.innerHTML = `
+          <tr>
+            <td colspan="8" class="text-center text-muted">No market conditions data available</td>
+          </tr>
+        `;
+      }
+    }
+
+    // Update charts if needed
+    if (!changedSections || changedSections.includes('charts')) {
+      initializeCharts();
+    }
+  }
+
+  // Initialize all charts
+  function initializeCharts() {
+    // Destroy existing charts if they exist
+    if (window.equityChart) window.equityChart.destroy();
+    if (window.winLossChart) window.winLossChart.destroy();
+    if (window.monthlyChart) window.monthlyChart.destroy();
+    if (window.symbolChart) window.symbolChart.destroy();
+    
+    // Equity Curve Chart
+    if (MT5_DATA.equityCurve && MT5_DATA.equityCurve.length > 0) {
+      const equityCurveCtx = document.getElementById('equityCurveChart').getContext('2d');
+
+      // Prepare data
+      const equityData = MT5_DATA.equityCurve.map(point => ({
+        x: new Date(point.Time.replace(/\./g, '-')).getTime(),
+        y: point.CumulativeProfit
+      }));
+
+      // Determine trend direction
+      const startProfit = equityData[0].y;
+      const endProfit = equityData[equityData.length - 1].y;
+      const isProfit = endProfit >= startProfit;
+
+      // Colors
+      const borderColor = isProfit ? 'rgba(40, 167, 69, 1)' : 'rgba(220, 53, 69, 1)';
+      const backgroundColor = isProfit ? 'rgba(40, 167, 69, 0.1)' : 'rgba(220, 53, 69, 0.1)';
+
+      // Destroy existing chart instance if it exists
+      if (window.equityChart) {
+        window.equityChart.destroy();
+      }
+
+      // Create Chart
+      window.equityChart = new Chart(equityCurveCtx, {
+        type: 'line',
+        data: {
+          datasets: [{
+            label: 'Equity Curve',
+            data: equityData,
+            borderColor: borderColor,
+            backgroundColor: backgroundColor,
+            tension: 0.4,
+            fill: true,
+            pointRadius: 0, // Remove point dots
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return formatCurrency(context.raw.y);
+                }
+              }
+            },
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            x: {
+              type: 'time',
+              time: {
+                unit: 'hour',
+                tooltipFormat: 'yyyy-MM-dd HH:mm'
+              },
+              title: {
+                display: true,
+                text: 'Time'
+              }
+            },
+            y: {
+              beginAtZero: false,
+              ticks: {
+                callback: function(value) {
+                  return formatCurrency(value);
+                }
+              },
+              title: {
+                display: true,
+                text: 'Equity Value'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Win/Loss Donut Chart
+    if (MT5_DATA.accountMetrics) {
+      const winLossCtx = document.getElementById('winLossDonutChart').getContext('2d');
+      const metricsData = MT5_DATA.accountMetrics;
+      
+      window.winLossChart = new Chart(winLossCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Win Trades', 'Loss Trades'],
+          datasets: [{
+            data: [metricsData.TotalProfitTrades, metricsData.TotalLossTrades],
+            backgroundColor: [
+              'rgba(40, 167, 69, 0.8)',
+              'rgba(220, 53, 69, 0.8)'
+            ],
+            borderColor: [
+              'rgba(40, 167, 69, 1)',
+              'rgba(220, 53, 69, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const label = context.label || '';
+                  const value = context.raw || 0;
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const percentage = Math.round((value / total) * 100);
+                  return `${label}: ${value} (${percentage}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+    
+    // Monthly Performance Chart
+    if (MT5_DATA.monthlyProfits && Object.keys(MT5_DATA.monthlyProfits).length > 0) {
+      const monthlyCtx = document.getElementById('monthlyPerformanceChart').getContext('2d');
+      const monthlyData = {
+        labels: Object.keys(MT5_DATA.monthlyProfits),
+        datasets: [{
+          label: 'Monthly P&L',
+          data: Object.values(MT5_DATA.monthlyProfits),
+          backgroundColor: Object.values(MT5_DATA.monthlyProfits).map(val => 
+            val >= 0 ? 'rgba(40, 167, 69, 0.8)' : 'rgba(220, 53, 69, 0.8)'
+          ),
+          borderColor: Object.values(MT5_DATA.monthlyProfits).map(val => 
+            val >= 0 ? 'rgba(40, 167, 69, 1)' : 'rgba(220, 53, 69, 1)'
+          ),
+          borderWidth: 1
+        }]
+      };
+      
+      window.monthlyChart = new Chart(monthlyCtx, {
+        type: 'bar',
+        data: monthlyData,
+        options: {
+          responsive: true,
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return formatCurrency(context.raw);
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              ticks: {
+                callback: function(value) {
+                  return formatCurrency(value);
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+    
+    // Symbol Performance Chart
+    if (MT5_DATA.symbolPerformance && MT5_DATA.symbolPerformance.length > 0) {
+      const symbolCtx = document.getElementById('symbolPerformanceChart').getContext('2d');
+      const symbolData = MT5_DATA.symbolPerformance;
+      
+      window.symbolChart = new Chart(symbolCtx, {
+        type: 'bar',
+        data: {
+          labels: symbolData.map(s => s.Symbol),
+          datasets: [
+            {
+              label: 'Best Trade',
+              data: symbolData.map(s => s.BestTrade),
+              backgroundColor: 'rgba(40, 167, 69, 0.8)',
+              borderColor: 'rgba(40, 167, 69, 1)',
+              borderWidth: 1
+            },
+            {
+              label: 'Worst Trade',
+              data: symbolData.map(s => s.WorstTrade),
+              backgroundColor: 'rgba(220, 53, 69, 0.8)',
+              borderColor: 'rgba(220, 53, 69, 1)',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return formatCurrency(context.raw);
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              ticks: {
+                callback: function(value) {
+                  return formatCurrency(value);
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Store heartbeat data and maintain only 10 most recent
+  function storeHeartbeat(heartbeatData) {
+    if (!heartbeatData) return;
+    
+    let heartbeats = JSON.parse(localStorage.getItem(HEARTBEAT_KEY)) || [];
+    
+    // Add new heartbeat with timestamp
+    heartbeats.unshift({
+      timestamp: new Date().toISOString(),
+      data: heartbeatData
+    });
+    
+    // Keep only the 10 most recent
+    if (heartbeats.length > MAX_HEARTBEATS) {
+      heartbeats = heartbeats.slice(0, MAX_HEARTBEATS);
+    }
+    
+    localStorage.setItem(HEARTBEAT_KEY, JSON.stringify(heartbeats));
+    updateHeartbeatNotifications();
+  }
+
+  // Update the notification dropdown with heartbeat data
+  function updateHeartbeatNotifications() {
+    const container = document.querySelector('.dropdown-notifications-list ul');
+    if (!container) return;
+    
+    const heartbeats = JSON.parse(localStorage.getItem(HEARTBEAT_KEY)) || [];
+    container.innerHTML = '';
+    
+    heartbeats.forEach((hb, index) => {
+      const hbData = hb.data;
+      const notificationItem = document.createElement('li');
+      notificationItem.className = 'list-group-item list-group-item-action dropdown-notifications-item';
+      
+      // Determine notification type based on connection status
+      const isConnected = hbData.Connected === "true";
+      const notificationType = isConnected ? 'success' : 'danger';
+      const iconClass = isConnected ? 'bx-check-circle' : 'bx-error';
+      const statusText = isConnected ? 'Connected' : 'Disconnected';
+      
+      notificationItem.innerHTML = `
+        <div class="d-flex">
+          <div class="flex-shrink-0 me-3">
+            <div class="avatar">
+              <span class="avatar-initial rounded-circle bg-label-${notificationType}">
+                <i class="icon-base bx ${iconClass}"></i>
+              </span>
+            </div>
+          </div>
+          <div class="flex-grow-1">
+            <h6 class="small mb-0">Heartbeat ${statusText}</h6>
+            <small class="mb-1 d-block text-body">
+              Account Number: ${hbData.AccountNumber}<br>
+              Server: ${hbData.ServerName || 'N/A'}<br>
+              Time: ${new Date(hb.timestamp).toLocaleTimeString()}
+              <br>Balance: ${hbData.Balance}
+              <br>
+            </small>
+            <small class="text-body-secondary">${formatTimeAgo(hb.timestamp)}</small>
+          </div>
+          <div class="flex-shrink-0 dropdown-notifications-actions">
+            <a href="javascript:void(0)" class="dropdown-notifications-archive" data-index="${index}">
+              <span class="icon-base bx bx-x"></span>
+            </a>
+          </div>
+        </div>
+      `;
+      container.appendChild(notificationItem);
+    });
+    
+    // Update badge count
+    const badge = document.querySelector('.badge-notifications');
+    const countBadge = document.querySelector('.dropdown-menu-header .badge');
+    if (badge) {
+      badge.textContent = heartbeats.length > 0 ? heartbeats.length : '';
+      badge.style.display = heartbeats.length > 0 ? 'block' : 'none';
+    }
+    if (countBadge) {
+      countBadge.textContent = `${heartbeats.length} New`;
+      countBadge.style.display = heartbeats.length > 0 ? 'inline-block' : 'none';
+    }
+    
+    // Add event listeners for delete buttons
+    document.querySelectorAll('.dropdown-notifications-archive').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const index = parseInt(this.getAttribute('data-index'));
+        removeHeartbeat(index);
+      });
+    });
+  }
+
+  // Remove a specific heartbeat by index
+  function removeHeartbeat(index) {
+    let heartbeats = JSON.parse(localStorage.getItem(HEARTBEAT_KEY)) || [];
+    if (index >= 0 && index < heartbeats.length) {
+      heartbeats.splice(index, 1);
+      localStorage.setItem(HEARTBEAT_KEY, JSON.stringify(heartbeats));
+      updateHeartbeatNotifications();
+    }
+  }
+
+  // Format time ago
+  function formatTimeAgo(timestamp) {
+    const now = new Date();
+    const date = new Date(timestamp);
+    const diff = now - date;
+    
+    const minutes = Math.floor(diff / (1000 * 60));
+    if (minutes < 60) return `${minutes}m ago`;
+    
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    
+    const days = Math.floor(hours / 24);
+    return `${days}d ago`;
+  }
+
+  // Enhanced fetch with retry logic
+  async function fetchUpdatedData() {
+    try {
+      const response = await fetch('/api/mt5-data', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache'
+        },
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      retryCount = 0;
+      const data = await response.json();
+      
+      if (data.data) {
+        return data.data;
+      }
+      throw new Error("Invalid data format");
+      
+    } catch (error) {
+      retryCount++;
+      
+      if (retryCount <= MAX_RETRIES) {
+        console.warn(`Retry ${retryCount}/${MAX_RETRIES} in ${RETRY_DELAY/1000} seconds...`);
+        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+        return fetchUpdatedData();
+      }
+      
+      throw error;
+    }
+  }
+
+  // Main refresh function with error handling
+  async function refreshDashboard() {
+    if (isRefreshing) return;
+    isRefreshing = true;
+    
+    try {
+      // Show loading indicator
+      const indicator = document.getElementById('refresh-indicator');
+      if (indicator) indicator.style.display = 'block';
+      
+      const newData = await fetchUpdatedData();
+      
+      if (newData) {
+        const changedSections = [];
+        
+        // Compare all sections to detect changes
+        const sections = [
+          'accountDetails', 'openTrades', 'accountMetrics', 
+          'riskMetrics', 'historyTrades', 'marketConditions',
+          'equityCurve', 'monthlyProfits', 'symbolPerformance',
+          'tradeStatus'
+        ];
+        
+        sections.forEach(section => {
+          if (JSON.stringify(MT5_DATA[section]) !== JSON.stringify(newData[section])) {
+            changedSections.push(section);
+          }
+        });
+        
+        if (changedSections.length > 0) {
+          MT5_DATA = newData;
+          LAST_UPDATED = new Date().toISOString();
+              const dateObj = new Date(LAST_UPDATED);
+              const options = {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+              };
+
+              LAST_UPDATED = `Last updated: ${dateObj.toLocaleString("en-US", options)}`;
+          initializeDashboard(changedSections);
+          showUpdateNotification('Data updated successfully', 'success');
+        }
+        
+        // Store heartbeat data if available
+        if (newData.heartbeat) {
+          storeHeartbeat(newData.heartbeat);
+        }
+      }
+    } catch (error) {
+      console.error('Refresh failed:', error);
+      showUpdateNotification(`Update failed: ${error.message}`, 'danger');
+      
+      const backoffDelay = Math.min(
+        RETRY_DELAY * Math.pow(2, retryCount), 
+        300000
+      );
+      
+      console.log(`Scheduling next refresh in ${backoffDelay/1000} seconds`);
+      setTimeout(refreshDashboard, backoffDelay);
+      return;
+    } finally {
+      const indicator = document.getElementById('refresh-indicator');
+      if (indicator) indicator.style.display = 'none';
+      isRefreshing = false;
+      
+      if (retryCount === 0) {
+        startRefreshInterval();
+      }
+    }
+  }
+
+  // Notification system
+  function showUpdateNotification(message, type = 'info') {
+    document.querySelectorAll('.alert-notification').forEach(el => el.remove());
+    
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} alert-dismissible fade show alert-notification`;
+    notification.innerHTML = `
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      <strong>${type === 'success' ? '✓' : '⚠'} </strong>${message}
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, 5000);
+  }
+
+  // Connection status management
+  function updateConnectionStatus(connected) {
+    const statusElement = document.getElementById('connection-status');
+    if (statusElement) {
+      statusElement.innerHTML = connected 
+        ? '<span class="badge bg-success">Connected</span>'
+        : '<span class="badge bg-danger">Disconnected</span>';
+    }
+  }
+
+  // Start/stop refresh interval
+  function startRefreshInterval() {
+    if (refreshInterval) clearInterval(refreshInterval);
+    refreshInterval = setInterval(refreshDashboard, REFRESH_INTERVAL);
+  }
+
+  function stopRefreshInterval() {
+    if (refreshInterval) clearInterval(refreshInterval);
+  }
+
+  // Initialize everything when DOM is loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    // Create refresh indicator if not exists
+    if (!document.getElementById('refresh-indicator')) {
+      const indicator = document.createElement('div');
+      indicator.id = 'refresh-indicator';
+      indicator.innerHTML = `
+        <span class="spinner-border spinner-border-sm"></span> Updating...
+      `;
+      document.body.appendChild(indicator);
+    }
+    
+    // Initialize dashboard navigation
+    initializeDashboardNavigation();
+    addHighlightStyles();
+    
+    // Initialize dashboard
+    initializeDashboard();
+    startRefreshInterval();
+    
+    // Initialize heartbeat notifications
+    updateHeartbeatNotifications();
+    
+    // Set up manual refresh button
+    const manualRefreshBtn = document.getElementById('manual-refresh');
+    if (manualRefreshBtn) {
+      manualRefreshBtn.addEventListener('click', function() {
+        stopRefreshInterval();
+        refreshDashboard();
+      });
+    }
+    
+    // Set up "Mark all as read" button
+    const markAllReadBtn = document.querySelector('.dropdown-notifications-all');
+    if (markAllReadBtn) {
+      markAllReadBtn.addEventListener('click', function() {
+        localStorage.removeItem(HEARTBEAT_KEY);
+        updateHeartbeatNotifications();
+      });
+    }
+    
+    // Set up online/offline detection
+    window.addEventListener('online', () => {
+      updateConnectionStatus(true);
+      refreshDashboard();
+    });
+    
+    window.addEventListener('offline', () => {
+      updateConnectionStatus(false);
+      showUpdateNotification('Lost internet connection', 'danger');
+    });
+  });
+
+  // Clean up when page unloads
+  window.addEventListener('beforeunload', function() {
+    stopRefreshInterval();
+  });
+</script>
+
+{% endblock content %}

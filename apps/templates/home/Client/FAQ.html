@@ -1,0 +1,528 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} FAQ {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="layout-container">
+
+  <!-- Layout container -->
+  <div class="layout-page">
+    <!-- Content wrapper -->
+    <div class="content-wrapper">
+      <!-- Content -->
+      <div class="container-xxl flex-grow-1 container-p-y">
+
+        <div class="faq-header d-flex flex-column justify-content-center align-items-center h-px-300 position-relative">
+          <h4 class="text-center mb-2">Hello, how can we help?</h4>
+          <p class="text-center mb-0 px-4">or choose a category to quickly find the help you need</p>
+          <div class="input-wrapper mt-4 input-group input-group-merge mx-lg-5">
+            <span class="input-group-text" id="basic-addon1"><i class="icon-base bx bx-search"></i></span>
+            <input type="text" class="form-control" placeholder="Search articles..." aria-label="Search"
+              aria-describedby="basic-addon1" />
+          </div>
+        </div>
+
+        <div class="row mt-6">
+          <!-- Navigation -->
+          <div class="col-lg-3 col-md-4 col-12 mb-md-0 mb-4">
+            <div class="d-flex justify-content-between flex-column nav-align-left mb-2 mb-md-0">
+              <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#account">
+                    <i class="icon-base bx bx-user faq-nav-icon me-1_5"></i>
+                    <span class="align-middle">Account Management</span>
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#trade">
+                    <i class="icon-base bx bx-list-check faq-nav-icon me-1_5"></i>
+                    <span class="align-middle">Trade Logging</span>
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#analytics">
+                    <i class="icon-base bx bx-line-chart faq-nav-icon me-1_5"></i>
+                    <span class="align-middle">Performance Analytics</span>
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#subscriptions">
+                    <i class="icon-base bx bx-credit-card faq-nav-icon me-1_5"></i>
+                    <span class="align-middle">Payment &amp; Subscriptions</span>
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#security">
+                    <i class="icon-base bx bx-lock faq-nav-icon me-1_5"></i>
+                    <span class="align-middle">Data Security</span>
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#community">
+                    <i class="icon-base bx bx-group faq-nav-icon me-1_5"></i>
+                    <span class="align-middle">Community</span>
+                  </button>
+                </li>
+              </ul>
+              <div class="d-none d-md-block">
+                <div class="my-4 d-flex justify-content-center">
+                  <img src="/static/assets/img/illustrations/sitting-girl-with-laptop.png" class="img-fluid" width="240" alt="FAQ Image" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /Navigation -->
+        
+          <!-- FAQ's -->
+          <div class="col-lg-9 col-md-8 col-12">
+            <div class="tab-content p-0">
+        
+              <!-- Account Management -->
+              <div class="tab-pane fade show active" id="account" role="tabpanel">
+                <div class="d-flex mb-4 gap-4 align-items-center">
+                  <div>
+                    <span class="badge bg-label-primary rounded w-px-50 py-2">
+                      <i class="icon-base bx bx-user icon-26px mt-50"></i>
+                    </span>
+                  </div>
+                  <div>
+                    <h5 class="mb-0">
+                      <span class="align-middle">Account Management</span>
+                    </h5>
+                    <span>Manage your account and security settings</span>
+                  </div>
+                </div>
+                <div id="accordionAccount" class="accordion">
+                  <div class="card accordion-item active">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accordionAccount-1" aria-controls="accordionAccount-1">
+                        How do I create an account?
+                      </button>
+                    </h2>
+                    <div id="accordionAccount-1" class="accordion-collapse collapse show">
+                      <div class="accordion-body">
+                        To create an account, click the signup button on our homepage and follow the prompts to register using your email or via Google/Apple login. Registration is quick and secure.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionAccount-2" aria-controls="accordionAccount-2">
+                        What login options do I have?
+                      </button>
+                    </h2>
+                    <div id="accordionAccount-2" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        You can log in using your email and password, or via Google/Apple accounts. Two-factor authentication is also available for enhanced security.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionAccount-3" aria-controls="accordionAccount-3">
+                        How do I reset my password or update my profile?
+                      </button>
+                    </h2>
+                    <div id="accordionAccount-3" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        Use the "Forgot Password" option on the login page to reset your password. Once logged in, navigate to your account settings to update your profile details.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionAccount-4" aria-controls="accordionAccount-4">
+                        How can I view and manage my active sessions?
+                      </button>
+                    </h2>
+                    <div id="accordionAccount-4" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        You can view all active sessions in your account management settings and delete any session that you no longer recognize or need.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Account Management -->
+        
+              <!-- Trade Logging -->
+              <div class="tab-pane fade" id="trade" role="tabpanel">
+                <div class="d-flex mb-4 gap-4 align-items-center">
+                  <div>
+                    <span class="badge bg-label-primary rounded w-px-50 py-2">
+                      <i class="icon-base bx bx-list-check icon-26px mt-50"></i>
+                    </span>
+                  </div>
+                  <div>
+                    <h5 class="mb-0">
+                      <span class="align-middle">Trade Logging</span>
+                    </h5>
+                    <span>Log and review your trades</span>
+                  </div>
+                </div>
+                <div id="accordionTrade" class="accordion">
+                  <div class="card accordion-item active">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accordionTrade-1" aria-controls="accordionTrade-1">
+                        How do I log a new trade?
+                      </button>
+                    </h2>
+                    <div id="accordionTrade-1" class="accordion-collapse collapse show">
+                      <div class="accordion-body">
+                        Navigate to the trade logging section and fill in your trade details, including instrument, trade type, entry/exit points, and any additional notes.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionTrade-2" aria-controls="accordionTrade-2">
+                        What information can I include when logging a trade?
+                      </button>
+                    </h2>
+                    <div id="accordionTrade-2" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        You can log details such as trade type, instrument, portfolio tracking metrics, self-reflection notes, dates, and custom tags for better comparison.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionTrade-3" aria-controls="accordionTrade-3">
+                        How do I import my trades using the provided Excel template?
+                      </button>
+                    </h2>
+                    <div id="accordionTrade-3" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        Download the Excel template from our support page, fill in your trade details, and upload it to your account to import your trades seamlessly.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionTrade-4" aria-controls="accordionTrade-4">
+                        Can I compare my trades based on specific criteria (dates, months, tags)?
+                      </button>
+                    </h2>
+                    <div id="accordionTrade-4" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        Yes, our platform allows you to filter and compare trades based on dates, months, tags, and more, enabling detailed performance analysis.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Trade Logging -->
+        
+              <!-- Performance Analytics -->
+              <div class="tab-pane fade" id="analytics" role="tabpanel">
+                <div class="d-flex mb-4 gap-4 align-items-center">
+                  <div>
+                    <span class="badge bg-label-primary rounded w-px-50 py-2">
+                      <i class="icon-base bx bx-line-chart icon-26px mt-50"></i>
+                    </span>
+                  </div>
+                  <div>
+                    <h5 class="mb-0">
+                      <span class="align-middle">Performance Analytics</span>
+                    </h5>
+                    <span>Analyze your trading performance</span>
+                  </div>
+                </div>
+                <div id="accordionAnalytics" class="accordion">
+                  <div class="card accordion-item active">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accordionAnalytics-1" aria-controls="accordionAnalytics-1">
+                        What analytics features are available to track my performance?
+                      </button>
+                    </h2>
+                    <div id="accordionAnalytics-1" class="accordion-collapse collapse show">
+                      <div class="accordion-body">
+                        Our platform offers detailed performance reports, portfolio tracking, and trend analysis to help you monitor your trading results over time.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionAnalytics-2" aria-controls="accordionAnalytics-2">
+                        How do I interpret my performance reports and charts?
+                      </button>
+                    </h2>
+                    <div id="accordionAnalytics-2" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        Our reports provide clear breakdowns of trade outcomes, risk metrics, and profit/loss analysis. Hover over charts for detailed insights and apply filters for customized views.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionAnalytics-3" aria-controls="accordionAnalytics-3">
+                        Can I view backtested strategy data or historical performance?
+                      </button>
+                    </h2>
+                    <div id="accordionAnalytics-3" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        Yes, you can access backtested strategy data and review historical performance to refine and improve your trading strategies.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Performance Analytics -->
+        
+              <!-- Payment & Subscriptions -->
+              <div class="tab-pane fade" id="subscriptions" role="tabpanel">
+                <div class="d-flex mb-4 gap-4 align-items-center">
+                  <div>
+                    <span class="badge bg-label-primary rounded w-px-50 py-2">
+                      <i class="icon-base bx bx-credit-card icon-26px mt-50"></i>
+                    </span>
+                  </div>
+                  <div>
+                    <h5 class="mb-0">
+                      <span class="align-middle">Payment &amp; Subscriptions</span>
+                    </h5>
+                    <span>Manage your subscription plans and payments</span>
+                  </div>
+                </div>
+                <div id="accordionSubscriptions" class="accordion">
+                  <div class="card accordion-item active">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accordionSubscriptions-1" aria-controls="accordionSubscriptions-1">
+                        What subscription plans are available?
+                      </button>
+                    </h2>
+                    <div id="accordionSubscriptions-1" class="accordion-collapse collapse show">
+                      <div class="accordion-body">
+                        We offer a free version with limited features, a standard plan with essential tools, and an enterprise plan with advanced functionalities. Choose between monthly or yearly billing.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionSubscriptions-2" aria-controls="accordionSubscriptions-2">
+                        Can I switch between monthly and yearly payments?
+                      </button>
+                    </h2>
+                    <div id="accordionSubscriptions-2" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        Yes, you can switch between monthly and yearly subscription plans at any time through your account settings.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionSubscriptions-3" aria-controls="accordionSubscriptions-3">
+                        What payment methods do you accept?
+                      </button>
+                    </h2>
+                    <div id="accordionSubscriptions-3" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        We accept major credit cards and other secure payment options as detailed on our payment page.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionSubscriptions-4" aria-controls="accordionSubscriptions-4">
+                        What is your refund policy?
+                      </button>
+                    </h2>
+                    <div id="accordionSubscriptions-4" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        If you are not satisfied with our service within the first 6 hours, you can request a refund. Please contact support to initiate the process.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Payment & Subscriptions -->
+        
+              <!-- Data Security -->
+              <div class="tab-pane fade" id="security" role="tabpanel">
+                <div class="d-flex mb-4 gap-4 align-items-center">
+                  <div>
+                    <span class="badge bg-label-primary rounded w-px-50 py-2">
+                      <i class="icon-base bx bx-lock icon-26px mt-50"></i>
+                    </span>
+                  </div>
+                  <div>
+                    <h5 class="mb-0">
+                      <span class="align-middle">Data Security</span>
+                    </h5>
+                    <span>Keep your data safe and secure</span>
+                  </div>
+                </div>
+                <div id="accordionSecurity" class="accordion">
+                  <div class="card accordion-item active">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accordionSecurity-1" aria-controls="accordionSecurity-1">
+                        How is my data secured on the platform?
+                      </button>
+                    </h2>
+                    <div id="accordionSecurity-1" class="accordion-collapse collapse show">
+                      <div class="accordion-body">
+                        We prioritize your data security by using encrypted logins, two-factor authentication, and secure data storage protocols.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionSecurity-2" aria-controls="accordionSecurity-2">
+                        What steps can I take if I suspect unauthorized access?
+                      </button>
+                    </h2>
+                    <div id="accordionSecurity-2" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        If you suspect any unauthorized access, immediately review your active sessions, change your password, and contact our support team.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionSecurity-3" aria-controls="accordionSecurity-3">
+                        How do I delete unwanted sessions or data?
+                      </button>
+                    </h2>
+                    <div id="accordionSecurity-3" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        You can view and delete any unwanted active sessions or data from your account management settings.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Data Security -->
+        
+              <!-- Community -->
+              <div class="tab-pane fade" id="community" role="tabpanel">
+                <div class="d-flex mb-4 gap-4 align-items-center">
+                  <div>
+                    <span class="badge bg-label-primary rounded w-px-50 py-2">
+                      <i class="icon-base bx bx-group icon-26px mt-50"></i>
+                    </span>
+                  </div>
+                  <div>
+                    <h5 class="mb-0">
+                      <span class="align-middle">Community &amp; Additional Features</span>
+                    </h5>
+                    <span>Explore our community and extra resources</span>
+                  </div>
+                </div>
+                <div id="accordionCommunity" class="accordion">
+                  <div class="card accordion-item active">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accordionCommunity-1" aria-controls="accordionCommunity-1">
+                        What community features are available?
+                      </button>
+                    </h2>
+                    <div id="accordionCommunity-1" class="accordion-collapse collapse show">
+                      <div class="accordion-body">
+                        Our platform offers blogs, news updates, strategy explanations, and an academy section featuring educational resources from beginner to advanced levels.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionCommunity-2" aria-controls="accordionCommunity-2">
+                        How do I access the educational resources and academy materials?
+                      </button>
+                    </h2>
+                    <div id="accordionCommunity-2" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        Simply visit our Academy section to explore tutorials, backtested strategies, and step-by-step guides to enhance your trading skills.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionCommunity-3" aria-controls="accordionCommunity-3">
+                        Will there be a dedicated mobile app in the future?
+                      </button>
+                    </h2>
+                    <div id="accordionCommunity-3" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        Although we currently do not have a mobile app, our website is fully responsive. A dedicated mobile app is in development.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionCommunity-4" aria-controls="accordionCommunity-4">
+                        Where can I find the latest trading news and market insights?
+                      </button>
+                    </h2>
+                    <div id="accordionCommunity-4" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        Visit our blogs and news sections for regular updates, market insights, and detailed strategy analyses.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Community -->
+        
+            </div>
+          </div>
+          <!-- /FAQ's -->
+        </div>
+        
+
+        <!-- Contact -->
+        <div class="row my-6">
+          <div class="col-12 text-center my-6">
+            <div class="badge bg-label-primary">Question?</div>
+            <h4 class="my-2">You still have a question?</h4>
+            <p class="mb-0">If you can't find question in our FAQ, you can contact us. We'll answer you shortly!</p>
+          </div>
+        </div>
+        <div class="row justify-content-center gap-sm-0 gap-6">
+          <div class="col-sm-6">
+            <div class="py-6 rounded bg-faq-section text-center">
+              <span class="badge bg-label-primary p-2">
+                <i class="icon-base bx bx-phone icon-26px mx-50 my-50"></i>
+              </span>
+              <h5 class="mt-4 mb-1"><a class="text-heading" href="tel:+(1)25482568">+(1) 2548 2568</a></h5>
+              <p class="mb-0">We are always happy to help</p>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="py-6 rounded bg-faq-section text-center">
+              <span class="badge bg-label-primary p-2">
+                <i class="icon-base bx bx-envelope icon-26px mx-50 my-50"></i>
+              </span>
+              <h5 class="mt-4 mb-1"><a class="text-heading" href="mailto:help@help.com">help@help.com</a></h5>
+              <p class="mb-0">Best way to get a quick answer</p>
+            </div>
+          </div>
+        </div>
+        <!-- /Contact -->
+
+      </div>
+      <!-- / Content -->
+
+
+
+
+
+      <div class="content-backdrop fade"></div>
+    </div>
+    <!-- Content wrapper -->
+  </div>
+  <!-- / Layout page -->
+</div>
+
+<!-- Overlay -->
+<div class="layout-overlay layout-menu-toggle"></div>
+
+
+<!-- Drag Target Area To SlideIn Menu On Small Screens -->
+<div class="drag-target"></div>
+
+
+<!-- / Layout wrapper -->
+
+{% endblock content %}

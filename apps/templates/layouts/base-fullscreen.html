@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Trading Journal - {% block title %}{% endblock %}</title>
+
+  <!-- Meta Tags for SEO & Social Media -->
+  <meta content="Unlock powerful insights into your trading strategy and enhance your profitability with KnightWatcher’s Trading Journal. Start making informed decisions today!" name="description" />
+  <meta content="Top-Rated Trading Journal - KnightWatcher" property="og:title" />
+  <meta content="Unlock powerful insights into your trading strategy and enhance your profitability with KnightWatcher’s Trading Journal. Start making informed decisions today!" property="og:description" />
+  <meta content="/static/assets/img/layouts/default.jpg" property="og:image" />
+  <meta content="Top-Rated Trading Journal - KnightWatcher" property="twitter:title" />
+  <meta content="Unlock powerful insights into your trading strategy and enhance your profitability with KnightWatcher’s Trading Journal. Start making informed decisions today!" property="twitter:description" />
+  <meta property="og:type" content="website" />
+  <meta content="summary_large_image" name="twitter:card" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+
+  <!-- Link to main CSS and assets -->
+  <link href="/static/assets/css/home.css" rel="stylesheet" type="text/css" />
+  <link href="/static/assets/img/favicon.png" rel="shortcut icon" type="image/x-icon" />
+  <link href="/static/assets/img/favicon.png" rel="apple-touch-icon" />
+
+  <!-- Iconify Icons (if using) -->
+  <link rel="stylesheet" href="/static/assets/vendor/fonts/iconify-icons.css" />
+
+  <!-- Core CSS (Customize as needed) -->
+  <link rel="stylesheet" href="/static/assets/vendor/css/core.css" />
+  <!-- Vendors CSS for additional libraries (Perfect Scrollbar) -->
+  <link rel="stylesheet" href="/static/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+
+  <!-- Page-specific CSS (e.g., for authentication or layouts) -->
+  <link rel="stylesheet" href="/static/assets/vendor/css/pages/page-auth.css" />
+
+  <!-- Google Fonts (optional) -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+
+  <!-- Favicon -->
+  <link rel="icon" href="/static/assets/img/favicon.png" type="image/x-icon" />
+
+  <!-- Add any helper JavaScript files (if necessary) -->
+  <script src="/static/assets/vendor/js/helpers.js"></script>
+
+  <!-- Add Analytics or Tracking Script (Google Analytics Example) -->
+  <!-- Replace the below script with your actual tracking code -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXX-Y"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-XXXXX-Y');
+  </script>
+
+
+</head>
+
+
+  <style type="text/css">
+    body {
+      -webkit-font-smoothing: antialiased;
+    }
+
+    textarea,
+    input.text,
+    input[type="text"],
+    input[type="button"],
+    input[type="submit"],
+    input[type="phone"],
+    input[type="email"],
+    input[type="tel"],
+    .input-checkbox {
+      -webkit-appearance: none;
+    }
+
+    .large-button:hover .large-button-hover {
+      transform: translate(50%);
+    }
+
+    /*Add code for smooth scrolling*/
+    #logos-slider {
+      -webkit-transition-timing-function: linear !important;
+      -o-transition-timing-function: linear !important;
+      transition-timing-function: linear !important;
+    }
+
+    #timepicker::-webkit-scrollbar {
+      background: transparent;
+      width: 8px;
+      height: 5px;
+    }
+
+    #timepicker::-webkit-scrollbar-track {
+      background: transparent;
+
+    }
+
+    #timepicker::-webkit-scrollbar-thumb {
+      background: transparent;
+
+
+
+    }
+
+    .wrapper-nav {
+      -webkit-transform: translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+      -moz-transform: translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+      -ms-transform: translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+      transform: translate3d(0, 0%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+    }
+    /* Remove padding by default */
+.nav-link {
+    padding: 0;
+}
+
+/* Styling for mobile menu */
+@media screen and (max-width: 991px) {
+    .w-nav[data-collapse="medium"] .w-nav-menu {
+        display: none;
+        position: absolute; /* Keep menu fixed and independent of logo */
+        top: 60px; /* Adjust the top position based on the logo height */
+        right: 0;
+        width: 230px;
+        background-color: white; /* Optional: ensures the menu has a background */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: add shadow */
+        transition: top 0.3s ease-in-out; /* Smooth animation */
+        margin-top: 55px;
+    }
+    .wrapper-nav{
+      height: 80px;
+    }
+
+    /* When menu is active, make it visible */
+    .w-nav-menu.active {
+        display: block !important;
+        top: 60px; /* Adjust based on logo height */
+    }
+
+    /* Adjusting nav-link padding and margins */
+    .nav-link {
+        margin-bottom: 30px;
+        margin-left: 10px;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+/* Adjust for very small screens */
+@media screen and (max-width: 767px) {
+    .nav-link {
+        margin-bottom: 20px;
+    }
+}
+
+  </style>
+
+
+<body>
+
+  <div class="full-page">
+        <!-- Navigation Bar -->
+        <div class="wrapper-nav" style="height: 110px;">
+          <div class="container">
+            <div class="navbar w-nav" style="margin-top: -40px;" data-collapse="medium" data-animation="default" data-duration="0"
+              data-w-id="49d4253b-cd97-28ee-d421-7ca714256c91" data-easing="ease" data-easing2="ease" role="banner">
+              <div class="brand-wrapper-large">
+                <a href="/" aria-label="KnightWatcher logo" aria-current="page" class="brand w-inline-block w--current"></a>
+              </div>
+              <nav style="font-size: 16px; font-family: 'Arial', sans-serif; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; padding: 10px 0;" role="navigation" class="nav-menu w-nav-menu">
+                <a href="/" class="nav-link w-nav-link" style="color: #333; text-decoration: none; padding: 10px 15px; transition: all 0.3s ease;">Home</a>
+                <a href="/resources" class="nav-link w-nav-link" style="color: #333; text-decoration: none; padding: 10px 15px; transition: all 0.3s ease;">Resources</a>
+                <a href="/blogs" class="nav-link w-nav-link" style="color: #333; text-decoration: none; padding: 10px 15px; transition: all 0.3s ease;">Blogs</a>
+                <a href="/pricing-page" class="nav-link w-nav-link" style="color: #333; text-decoration: none; padding: 10px 15px; transition: all 0.3s ease;">Pricing</a>
+                <a href="/contact-us" class="nav-link w-nav-link" style="color: #333; text-decoration: none; padding: 10px 15px; transition: all 0.3s ease;">Contact</a>
+                <a href="/login" target="_blank" class="nav-link w-nav-link" style="color: #333; text-decoration: none; padding: 10px 15px; transition: all 0.3s ease;">Log In</a>
+                <a href="/register" target="_blank" class="large-button large-button-nav w-inline-block" style="background-color: #f39c12; color: white; padding: 12px 20px; font-weight: 700; text-transform: uppercase; border-radius: 5px; display: inline-block; transition: background-color 0.3s ease;">
+                  <div class="large-button-hover"></div>
+                  <div class="large-button-text" style="font-size: 14px;">Start Today &gt;</div>
+                </a>
+              </nav>
+              
+              <div class="menu-button w-nav-button">
+                <div class="holder-nav_line">
+                  <div class="nav-line_1"></div>
+                  <div class="nav-line_2"></div>
+                  <div class="nav-line_3"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="separator-nav"></div>
+        </div>
+        <!-- Navigation Bar -->
+    {% block content %}
+
+
+    {% endblock content %}
+    {% include 'includes/footer-fullscreen.html' %}
+    <!-- main-panel ends -->
+  </div>
+  <!-- page-body-wrapper ends -->
+
+
+  <!-- build:js assets/vendor/js/theme.js  -->
+  <script src="/static/assets/vendor/libs/jquery/jquery.js"></script>
+  <script src="/static/assets/vendor/libs/popper/popper.js"></script>
+  <script src="/static/assets/vendor/js/bootstrap.js"></script>
+  <script src="/static/assets/vendor/libs/%40algolia/autocomplete-js.js"></script>
+  <script src="/static/assets/vendor/libs/pickr/pickr.js"></script>
+  <script src="/static/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+  <script src="/static/assets/vendor/libs/hammer/hammer.js"></script>
+  <script src="/static/assets/vendor/libs/i18n/i18n.js"></script>
+  <script src="/static/assets/vendor/js/menu.js"></script>
+  <!-- endbuild -->
+  <!-- Vendors JS -->
+  <script src="/static/assets/vendor/libs/%40form-validation/popular.js"></script>
+  <script src="/static/assets/vendor/libs/%40form-validation/bootstrap5.js"></script>
+  <script src="/static/assets/vendor/libs/%40form-validation/auto-focus.js"></script>
+  <!-- Main JS -->
+  <script src="/static/assets/js/main.js"></script>
+  <!-- Page JS -->
+  <script src="/static/assets/js/pages-auth.js"></script>
+  <script>
+    // Function to detect mobile and tablet devices
+    function isMobileOrTablet() {
+      const userAgent = navigator.userAgent.toLowerCase();
+      return /android|webos|iphone|ipod|blackberry|iemobile|opera mini|tablet|ipad|playbook/.test(userAgent);
+    }
+
+    // Perform actions based on device type
+    // if (isMobileOrTablet()) {
+    // Redirect mobile/tablet users to the Android app download page
+    // window.location.href = '/your-website-page.html';
+    // }
+  </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $(".menu-button").click(function () {
+          $(".nav-menu").slideToggle().toggleClass("active"); // Toggle visibility and add class
+        });
+      });
+    </script>
+    
+  <!-- Specific Page JS goes HERE  -->
+  {% block javascripts %}{% endblock javascripts %}
+</body>
+</html>

@@ -1,0 +1,760 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Forex & Other Instruments Calculators{% endblock %}
+
+{% block stylesheets %}
+
+
+<!-- Bootstrap Select CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JS (if not already included) -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<!-- Bootstrap Select JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js"></script>
+
+<style>
+    
+  .calculators-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 10px;
+  }
+  .calculator-card {
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
+  }
+  .calculator-card h3 {
+      margin-bottom: 10px;
+      font-size: 1.25rem;
+  }
+  .calculator-card label {
+      display: block;
+      margin-top: 10px;
+  }
+
+  .calculator-card .btn {
+      margin-top: 10px;
+      cursor: pointer;
+  }
+  .calculator-card .result {
+      margin-top: 15px;
+      font-weight: bold;
+      white-space: pre-line;
+  }
+  @media (max-width: 992px) {
+      .calculators-grid {
+          grid-template-columns: repeat(2, 1fr);
+      }
+  }
+  @media (max-width: 576px) {
+      .calculators-grid {
+          grid-template-columns: 1fr;
+      }
+  }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="layout-container">
+  <div class="layout-page">
+    <div class="content-wrapper">
+      <div class="container-xxl flex-grow-1 container-p-y">
+        
+
+
+
+
+         
+        <div class="calculators-grid">
+
+          <!-- 1. Pip Calculator -->
+          <div id="pipCalculator" class="calculator-card">
+            <h3>Pip Calculator</h3>
+            <!-- Instrument Selection -->
+            <label for="instrumentType">Instrument Type:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentType">
+              <option value="forex">Forex</option>
+              <option value="indices">Indices</option>
+              <option value="metals">Metals</option>
+            </select>
+            <label for="currencyPair">Instrument:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="currencyPair">
+              <optgroup label="Forex" class="forex-options">
+                <!-- fxOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Indices" class="indices-options">
+                <!-- indicesOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Metals" class="metals-options">
+                <!-- metalsOptions will be injected here automatically -->
+              </optgroup>
+            </select>
+            <label for="tradeSize">Trade Size (Lots):</label>
+            <input class="form-control" type="number" id="tradeSize" placeholder="Enter lot size">
+            <label for="accountCurrency">Account Currency:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="accountCurrency">
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="JPY">JPY</option>
+              <option value="AUD">AUD</option>
+              <option value="CAD">CAD</option>
+              <option value="CHF">CHF</option>
+            </select>
+            <button class="btn btn-primary" onclick="calculatePipValue()">Calculate</button>
+            <div class="result" id="pipValueResult"></div>
+          </div>
+          
+          <!-- 2. Position Size Calculator -->
+          <div id="positionSizeCalculator" class="calculator-card">
+            <h3>Position Size Calculator</h3>
+            <label for="instrumentTypePS">Instrument Type:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentTypePS">
+              <option value="forex">Forex</option>
+              <option value="indices">Indices</option>
+              <option value="metals">Metals</option>
+            </select>
+            <label for="instrumentPS">Instrument:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentPS">
+              <optgroup label="Forex" class="forex-options">
+                <!-- fxOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Indices" class="indices-options">
+                <!-- indicesOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Metals" class="metals-options">
+                <!-- metalsOptions will be injected here automatically -->
+              </optgroup>
+            </select>
+            <label for="accountBalancePS">Account Balance:</label>
+            <input class="form-control" type="number" id="accountBalancePS" placeholder="Enter account balance">
+            <label for="riskPercentagePS">Risk Percentage (%):</label>
+            <input class="form-control" type="number" id="riskPercentagePS" placeholder="Enter risk percentage">
+            <label for="stopLossPS">Stop Loss (Pips):</label>
+            <input class="form-control" type="number" id="stopLossPS" placeholder="Enter stop loss in pips">
+            <button class="btn btn-primary" onclick="calculatePositionSize()">Calculate</button>
+            <div class="result" id="positionSizeResult"></div>
+          </div>
+          
+          <!-- 3. Risk-Reward Calculator -->
+          <div id="riskRewardCalculator" class="calculator-card">
+            <h3>Risk-Reward Calculator</h3>
+            <label for="instrumentTypeRR">Instrument Type:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentTypeRR">
+              <option value="forex">Forex</option>
+              <option value="indices">Indices</option>
+              <option value="metals">Metals</option>
+            </select>
+            <label for="instrumentRR">Instrument:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentRR">
+              <optgroup label="Forex" class="forex-options">
+                <!-- fxOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Indices" class="indices-options">
+                <!-- indicesOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Metals" class="metals-options">
+                <!-- metalsOptions will be injected here automatically -->
+              </optgroup>
+            </select>
+            <label for="riskPips">Risk (Pips):</label>
+            <input class="form-control" type="number" id="riskPips" placeholder="Enter risk in pips">
+            <label for="rewardPips">Reward (Pips):</label>
+            <input class="form-control" type="number" id="rewardPips" placeholder="Enter reward in pips">
+            <button class="btn btn-primary" onclick="calculateRiskReward()">Calculate</button>
+            <div class="result" id="riskRewardResult"></div>
+          </div>
+          
+          <!-- 4. Lot Size Calculator -->
+          <div id="lotSizeCalculator" class="calculator-card">
+            <h3>Lot Size Calculator</h3>
+            <label for="instrumentTypeLS">Instrument Type:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentTypeLS">
+              <option value="forex">Forex</option>
+              <option value="indices">Indices</option>
+              <option value="metals">Metals</option>
+            </select>
+            <label for="instrumentLS">Instrument:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentLS">
+              <optgroup label="Forex" class="forex-options">
+                <!-- fxOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Indices" class="indices-options">
+                <!-- indicesOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Metals" class="metals-options">
+                <!-- metalsOptions will be injected here automatically -->
+              </optgroup>
+            </select>
+            <label for="accountBalanceLS">Account Balance:</label>
+            <input class="form-control" type="number" id="accountBalanceLS" placeholder="Enter account balance">
+            <label for="riskPercentageLS">Risk Percentage (%):</label>
+            <input class="form-control" type="number" id="riskPercentageLS" placeholder="Enter risk percentage">
+            <label for="stopLossLS">Stop Loss (Pips):</label>
+            <input class="form-control" type="number" id="stopLossLS" placeholder="Enter stop loss in pips">
+            <label for="leverageLS">Leverage:</label>
+            <input class="form-control" type="number" id="leverageLS" placeholder="Enter leverage (e.g., 100)">
+            <button class="btn btn-primary" onclick="calculateLotSize()">Calculate</button>
+            <div class="result" id="lotSizeResult"></div>
+          </div>
+          
+          <!-- 5. Margin Calculator -->
+          <div id="marginCalculator" class="calculator-card">
+            <h3>Margin Calculator</h3>
+            <label for="instrumentTypeM">Instrument Type:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentTypeM">
+              <option value="forex">Forex</option>
+              <option value="indices">Indices</option>
+              <option value="metals">Metals</option>
+            </select>
+            <label for="instrumentM">Instrument:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentM">
+              <optgroup label="Forex" class="forex-options">
+                <!-- fxOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Indices" class="indices-options">
+                <!-- indicesOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Metals" class="metals-options">
+                <!-- metalsOptions will be injected here automatically -->
+              </optgroup>
+            </select>
+            <label for="tradeSizeMargin">Trade Size (Lots):</label>
+            <input class="form-control" type="number" id="tradeSizeMargin" placeholder="Enter trade size in lots">
+            <label for="leverageMargin">Leverage:</label>
+            <input class="form-control" type="number" id="leverageMargin" placeholder="Enter leverage (e.g., 100)">
+            <button class="btn btn-primary" onclick="calculateMargin()">Calculate</button>
+            <div class="result" id="marginResult"></div>
+          </div>
+          
+          <!-- 6. Profit/Loss Calculator -->
+          <div id="profitLossCalculator" class="calculator-card">
+            <h3>Profit/Loss Calculator</h3>
+            <label for="instrumentTypePL">Instrument Type:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentTypePL">
+              <option value="forex">Forex</option>
+              <option value="indices">Indices</option>
+              <option value="metals">Metals</option>
+            </select>
+            <label for="instrumentPL">Instrument:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentPL">
+              <optgroup label="Forex" class="forex-options">
+                <!-- fxOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Indices" class="indices-options">
+                <!-- indicesOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Metals" class="metals-options">
+                <!-- metalsOptions will be injected here automatically -->
+              </optgroup>
+            </select>
+            <label for="entryPrice">Entry Price:</label>
+            <input class="form-control" type="number" id="entryPrice" placeholder="Enter entry price">
+            <label for="exitPrice">Exit Price:</label>
+            <input class="form-control" type="number" id="exitPrice" placeholder="Enter exit price">
+            <label for="tradeSizePL">Trade Size (Lots):</label>
+            <input class="form-control" type="number" id="tradeSizePL" placeholder="Enter trade size in lots">
+            <button class="btn btn-primary" onclick="calculateProfitLoss()">Calculate</button>
+            <div class="result" id="profitLossResult"></div>
+          </div>
+          
+          <!-- 7. Swap Calculator -->
+          <div id="swapCalculator" class="calculator-card">
+            <h3>Swap Calculator</h3>
+            <label for="instrumentTypeSwap">Instrument Type:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentTypeSwap">
+              <option value="forex">Forex</option>
+              <option value="indices">Indices</option>
+              <option value="metals">Metals</option>
+            </select>
+            <label for="instrumentSwap">Instrument:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentSwap">
+              <optgroup label="Forex" class="forex-options">
+                <!-- fxOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Indices" class="indices-options">
+                <!-- indicesOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Metals" class="metals-options">
+                <!-- metalsOptions will be injected here automatically -->
+              </optgroup>
+            </select>
+            <label for="tradeSizeSwap">Trade Size (Lots):</label>
+            <input class="form-control" type="number" id="tradeSizeSwap" placeholder="Enter trade size in lots">
+            <label for="swapRate">Swap Rate (per lot per day):</label>
+            <input class="form-control" type="number" id="swapRate" placeholder="Enter swap rate">
+            <label for="daysHeld">Number of Days Held:</label>
+            <input class="form-control" type="number" id="daysHeld" placeholder="Enter number of days">
+            <button class="btn btn-primary" onclick="calculateSwap()">Calculate</button>
+            <div class="result" id="swapResult"></div>
+          </div>
+          
+          <!-- 8. Break-even Calculator -->
+          <div id="breakEvenCalculator" class="calculator-card">
+            <h3>Break-even Calculator</h3>
+            <label for="instrumentTypeBE">Instrument Type:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentTypeBE">
+              <option value="forex">Forex</option>
+              <option value="indices">Indices</option>
+              <option value="metals">Metals</option>
+            </select>
+            <label for="instrumentBE">Instrument:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentBE">
+              <optgroup label="Forex" class="forex-options">
+                <!-- fxOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Indices" class="indices-options">
+                <!-- indicesOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Metals" class="metals-options">
+                <!-- metalsOptions will be injected here automatically -->
+              </optgroup>
+            </select>
+            <label for="entryPriceBE">Entry Price:</label>
+            <input class="form-control" type="number" id="entryPriceBE" placeholder="Enter entry price">
+            <label for="spreadPipsBE">Spread (Pips):</label>
+            <input class="form-control" type="number" id="spreadPipsBE" placeholder="Enter spread in pips">
+            <label for="commissionBE">Commission (units):</label>
+            <input class="form-control" type="number" id="commissionBE" placeholder="Enter commission fees">
+            <label for="tradeSizeBE">Trade Size (Lots):</label>
+            <input class="form-control" type="number" id="tradeSizeBE" placeholder="Enter trade size in lots">
+            <button class="btn btn-primary" onclick="calculateBreakEven()">Calculate</button>
+            <div class="result" id="breakEvenResult"></div>
+          </div>
+          
+          <!-- 9. Spread Calculator -->
+          <div id="spreadCalculator" class="calculator-card">
+            <h3>Spread Calculator</h3>
+            <label for="instrumentTypeSP">Instrument Type:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentTypeSP">
+              <option value="forex">Forex</option>
+              <option value="indices">Indices</option>
+              <option value="metals">Metals</option>
+            </select>
+            <label for="instrumentSP">Instrument:</label>
+            <select class="form-control selectpicker" data-live-search="true" id="instrumentSP">
+              <optgroup label="Forex" class="forex-options">
+                <!-- fxOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Indices" class="indices-options">
+                <!-- indicesOptions will be injected here automatically -->
+              </optgroup>
+              <optgroup label="Metals" class="metals-options">
+                <!-- metalsOptions will be injected here automatically -->
+              </optgroup>
+            </select>
+            <label for="spreadPipsSP">Spread (Pips):</label>
+            <input class="form-control" type="number" id="spreadPipsSP" placeholder="Enter spread in pips">
+            <label for="tradeSizeSP">Trade Size (Lots):</label>
+            <input class="form-control" type="number" id="tradeSizeSP" placeholder="Enter trade size in lots">
+            <button class="btn btn-primary" onclick="calculateSpreadCost()">Calculate</button>
+            <div class="result" id="spreadResult"></div>
+          </div>
+        
+        </div>
+       
+        
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    // Define the constant containing all FX symbol options
+    const fxOptions = `
+      <option value="EUR/USD">EUR/USD</option>
+      <option value="USD/JPY">USD/JPY</option>
+      <option value="GBP/USD">GBP/USD</option>
+      <option value="AUD/USD">AUD/USD</option>
+      <option value="USD/CHF">USD/CHF</option>
+      <option value="USD/CAD">USD/CAD</option>
+      <option value="NZD/USD">NZD/USD</option>
+      <option value="EUR/JPY">EUR/JPY</option>
+      <option value="GBP/JPY">GBP/JPY</option>
+      <option value="EUR/GBP">EUR/GBP</option>
+      <option value="EUR/AUD">EUR/AUD</option>
+      <option value="AUD/JPY">AUD/JPY</option>
+      <option value="GBP/AUD">GBP/AUD</option>
+      <option value="CHF/JPY">CHF/JPY</option>
+      <option value="EUR/CHF">EUR/CHF</option>
+      <option value="GBP/CHF">GBP/CHF</option>
+      <option value="EUR/CAD">EUR/CAD</option>
+      <option value="AUD/CAD">AUD/CAD</option>
+      <option value="NZD/JPY">NZD/JPY</option>
+      <option value="GBP/CAD">GBP/CAD</option>
+      <option value="EUR/NZD">EUR/NZD</option>
+      <option value="GBP/NZD">GBP/NZD</option>
+      <option value="CAD/JPY">CAD/JPY</option>
+      <option value="NZD/CAD">NZD/CAD</option>
+      <option value="EUR/TRY">EUR/TRY</option>
+      <option value="USD/TRY">USD/TRY</option>
+      <option value="GBP/TRY">GBP/TRY</option>
+      <option value="EUR/RUB">EUR/RUB</option>
+      <option value="USD/RUB">USD/RUB</option>
+      <option value="EUR/SEK">EUR/SEK</option>
+      <option value="USD/SEK">USD/SEK</option>
+      <option value="EUR/NOK">EUR/NOK</option>
+      <option value="USD/NOK">USD/NOK</option>
+      <option value="EUR/DKK">EUR/DKK</option>
+      <option value="USD/DKK">USD/DKK</option>
+      <option value="GBP/SGD">GBP/SGD</option>
+      <option value="USD/SGD">USD/SGD</option>
+      <option value="AUD/SGD">AUD/SGD</option>
+      <option value="USD/HKD">USD/HKD</option>
+      <option value="USD/BRL">USD/BRL</option>
+      <option value="EUR/ZAR">EUR/ZAR</option>
+      <option value="USD/ZAR">USD/ZAR</option>
+      <option value="GBP/ZAR">GBP/ZAR</option>
+      <option value="USD/MXN">USD/MXN</option>
+      <option value="EUR/MXN">EUR/MXN</option>
+      <option value="GBP/MXN">GBP/MXN</option>
+      <option value="USD/INR">USD/INR</option>
+      <option value="EUR/INR">EUR/INR</option>
+      <option value="GBP/INR">GBP/INR</option>
+      <option value="USD/CNY">USD/CNY</option>
+      <option value="EUR/CNY">EUR/CNY</option>
+      <option value="GBP/CNY">GBP/CNY</option>
+      <option value="USD/KRW">USD/KRW</option>
+      <option value="EUR/KRW">EUR/KRW</option>
+      <option value="GBP/KRW">GBP/KRW</option>
+      <option value="USD/ILS">USD/ILS</option>
+      <option value="EUR/ILS">EUR/ILS</option>
+      <option value="GBP/ILS">GBP/ILS</option>
+      <option value="USD/PLN">USD/PLN</option>
+      <option value="EUR/PLN">EUR/PLN</option>
+      <option value="GBP/PLN">GBP/PLN</option>
+      <option value="USD/HUF">USD/HUF</option>
+      <option value="EUR/HUF">EUR/HUF</option>
+      <option value="GBP/HUF">GBP/HUF</option>
+      <option value="USD/CZK">USD/CZK</option>
+      <option value="EUR/CZK">EUR/CZK</option>
+      <option value="GBP/CZK">GBP/CZK</option>
+      <option value="USD/IDR">USD/IDR</option>
+      <option value="EUR/IDR">EUR/IDR</option>
+      <option value="GBP/IDR">GBP/IDR</option>
+      <option value="USD/THB">USD/THB</option>
+      <option value="EUR/THB">EUR/THB</option>
+      <option value="GBP/THB">GBP/THB</option>
+      <option value="USD/MYR">USD/MYR</option>
+      <option value="EUR/MYR">EUR/MYR</option>
+      <option value="GBP/MYR">GBP/MYR</option>
+      <option value="USD/PHP">USD/PHP</option>
+      <option value="EUR/PHP">EUR/PHP</option>
+      <option value="GBP/PHP">GBP/PHP</option>
+      <option value="USD/TWD">USD/TWD</option>
+      <option value="EUR/TWD">EUR/TWD</option>
+      <option value="GBP/TWD">GBP/TWD</option>
+      <option value="USD/CLP">USD/CLP</option>
+      <option value="EUR/CLP">EUR/CLP</option>
+      <option value="GBP/CLP">GBP/CLP</option>
+      <option value="USD/COP">USD/COP</option>
+      <option value="EUR/COP">EUR/COP</option>
+      <option value="GBP/COP">GBP/COP</option>
+      <option value="USD/EGP">USD/EGP</option>
+      <option value="EUR/EGP">EUR/EGP</option>
+      <option value="GBP/EGP">GBP/EGP</option>
+      <option value="USD/PKR">USD/PKR</option>
+      <option value="EUR/PKR">EUR/PKR</option>
+      <option value="GBP/PKR">GBP/PKR</option>
+      <option value="USD/BDT">USD/BDT</option>
+      <option value="EUR/BDT">EUR/BDT</option>
+      <option value="GBP/BDT">GBP/BDT</option>
+      <option value="USD/VND">USD/VND</option>
+      <option value="EUR/VND">EUR/VND</option>
+      <option value="GBP/VND">GBP/VND</option>
+    `;
+    
+    const indicesOption = `
+         <option value="US30">US30</option>
+        <option value="Nasdaq">Nasdaq</option>
+        <option value="DAX">DAX</option>
+        <option value="FTSE100">FTSE100</option>
+        <option value="Nikkei225">Nikkei225</option>
+        <option value="S&P500">S&P500</option>
+        <option value="HangSeng">Hang Seng</option>
+        <option value="CAC40">CAC40</option>
+        <option value="EuroStoxx50">Euro Stoxx 50</option>
+        <option value="S&P/ASX200">S&P/ASX200</option>
+    `;
+    const metalsOption = `
+        <option value="Gold">Gold</option>
+        <option value="Silver">Silver</option>
+        <option value="Platinum">Platinum</option>
+        <option value="Palladium">Palladium</option>
+        <option value="Copper">Copper</option>
+    `;
+// When the DOM is ready, insert options into all relevant optgroups
+document.addEventListener("DOMContentLoaded", function() {
+    // Update all Forex optgroups
+    document.querySelectorAll(".forex-options").forEach(el => {
+      el.innerHTML = fxOptions;
+    });
+    // Update all Indices optgroups
+    document.querySelectorAll(".indices-options").forEach(el => {
+      el.innerHTML = indicesOption;
+    });
+    // Update all Metals optgroups
+    document.querySelectorAll(".metals-options").forEach(el => {
+      el.innerHTML = metalsOption;
+    });
+    // Refresh the selectpicker(s) if using Bootstrap Select
+    $('.selectpicker').selectpicker('refresh');
+  });
+
+  </script>
+  
+<!-- JavaScript Functions -->
+<script>
+  // 1. Pip Calculator
+  function calculatePipValue() {
+      const instrumentType = document.getElementById("instrumentType").value;
+      const tradeSize = parseFloat(document.getElementById("tradeSize").value);
+      const instrument = document.getElementById("currencyPair").value;
+      const accountCurrency = document.getElementById("accountCurrency").value;
+      
+      if (!tradeSize || tradeSize <= 0) {
+          document.getElementById("pipValueResult").innerText = "Please enter a valid trade size.";
+          return;
+      }
+      
+      let pipValue = 0;
+      if (instrumentType === "forex") {
+          pipValue = 10 * tradeSize;
+          if (instrument.includes("JPY")) {
+              pipValue /= 100;
+          }
+      } else if (instrumentType === "indices") {
+          pipValue = 1 * tradeSize;  // Example: 1 pip = $1 per lot
+      } else if (instrumentType === "metals") {
+          pipValue = 1 * tradeSize;  // Example: 1 pip = $1 per lot
+      }
+      
+      document.getElementById("pipValueResult").innerText = `Pip Value: ${pipValue.toFixed(2)} ${accountCurrency}`;
+  }
+  
+  // 2. Position Size Calculator
+  function calculatePositionSize() {
+      const instrumentType = document.getElementById("instrumentTypePS").value;
+      const instrument = document.getElementById("instrumentPS").value;
+      const accountBalance = parseFloat(document.getElementById("accountBalancePS").value);
+      const riskPercentage = parseFloat(document.getElementById("riskPercentagePS").value);
+      const stopLoss = parseFloat(document.getElementById("stopLossPS").value);
+      
+      if (!accountBalance || accountBalance <= 0 || !riskPercentage || riskPercentage <= 0 || !stopLoss || stopLoss <= 0) {
+          document.getElementById("positionSizeResult").innerText = "Please enter valid values.";
+          return;
+      }
+      
+      const riskAmount = accountBalance * (riskPercentage / 100);
+      let pipValuePerLot;
+      if (instrumentType === "forex") {
+          pipValuePerLot = 10;
+          if (instrument.includes("JPY")) {
+              pipValuePerLot /= 100;
+          }
+      } else if (instrumentType === "indices" || instrumentType === "metals") {
+          pipValuePerLot = 1;
+      }
+      
+      const lotSize = riskAmount / (stopLoss * pipValuePerLot);
+      let resultText = `Recommended Lot Size: ${lotSize.toFixed(2)} lots`;
+      // Warning if recommended lot size seems high (for example, above 1 lot)
+      if (lotSize > 1) {
+          resultText += "\nWarning: Recommended lot size is high relative to your account balance.";
+      }
+      document.getElementById("positionSizeResult").innerText = resultText;
+  }
+  
+  // 3. Risk-Reward Calculator
+  function calculateRiskReward() {
+      const riskPips = parseFloat(document.getElementById("riskPips").value);
+      const rewardPips = parseFloat(document.getElementById("rewardPips").value);
+      
+      if (!riskPips || riskPips <= 0 || !rewardPips || rewardPips <= 0) {
+          document.getElementById("riskRewardResult").innerText = "Please enter valid values.";
+          return;
+      }
+      
+      const ratio = rewardPips / riskPips;
+      let resultText = `Risk-Reward Ratio: ${ratio.toFixed(2)}`;
+      if (ratio < 1) {
+          resultText += " - Warning: Ratio is below 1; risk may outweigh reward.";
+      }
+      document.getElementById("riskRewardResult").innerText = resultText;
+  }
+  
+  // 4. Lot Size Calculator
+  function calculateLotSize() {
+      const instrumentType = document.getElementById("instrumentTypeLS").value;
+      const instrument = document.getElementById("instrumentLS").value;
+      const accountBalance = parseFloat(document.getElementById("accountBalanceLS").value);
+      const riskPercentage = parseFloat(document.getElementById("riskPercentageLS").value);
+      const stopLoss = parseFloat(document.getElementById("stopLossLS").value);
+      const leverage = parseFloat(document.getElementById("leverageLS").value);
+      
+      if (!accountBalance || accountBalance <= 0 || !riskPercentage || riskPercentage <= 0 ||
+          !stopLoss || stopLoss <= 0 || !leverage || leverage <= 0) {
+          document.getElementById("lotSizeResult").innerText = "Please enter valid values.";
+          return;
+      }
+      
+      const riskAmount = accountBalance * (riskPercentage / 100);
+      let pipValuePerLot, contractSize;
+      if (instrumentType === "forex") {
+          pipValuePerLot = 10;
+          if (instrument.includes("JPY")) {
+              pipValuePerLot /= 100;
+          }
+          contractSize = 100000;
+      } else if (instrumentType === "indices") {
+          pipValuePerLot = 1;
+          contractSize = 10;  // example value
+      } else if (instrumentType === "metals") {
+          pipValuePerLot = 1;
+          contractSize = 100; // example value
+      }
+      
+      const lotSize = riskAmount / (stopLoss * pipValuePerLot);
+      const requiredMargin = (lotSize * contractSize) / leverage;
+      let resultText = `Recommended Lot Size: ${lotSize.toFixed(2)} lots\nRequired Margin: ${requiredMargin.toFixed(2)} units`;
+      if (requiredMargin > accountBalance) {
+          resultText += "\nWarning: The required margin exceeds your account balance!";
+      }
+      document.getElementById("lotSizeResult").innerText = resultText;
+  }
+  
+  // 5. Margin Calculator
+  function calculateMargin() {
+      const instrumentType = document.getElementById("instrumentTypeM").value;
+      const tradeSize = parseFloat(document.getElementById("tradeSizeMargin").value);
+      const leverage = parseFloat(document.getElementById("leverageMargin").value);
+      
+      if (!tradeSize || tradeSize <= 0 || !leverage || leverage <= 0) {
+          document.getElementById("marginResult").innerText = "Please enter valid values.";
+          return;
+      }
+      
+      let contractSize;
+      if (instrumentType === "forex") {
+          contractSize = 100000;
+      } else if (instrumentType === "indices") {
+          contractSize = 10;
+      } else if (instrumentType === "metals") {
+          contractSize = 100;
+      }
+      
+      const requiredMargin = (tradeSize * contractSize) / leverage;
+      document.getElementById("marginResult").innerText = `Required Margin: ${requiredMargin.toFixed(2)} units`;
+  }
+  
+  // 6. Profit/Loss Calculator
+  function calculateProfitLoss() {
+      const instrumentType = document.getElementById("instrumentTypePL").value;
+      const instrument = document.getElementById("instrumentPL").value;
+      const entryPrice = parseFloat(document.getElementById("entryPrice").value);
+      const exitPrice = parseFloat(document.getElementById("exitPrice").value);
+      const tradeSize = parseFloat(document.getElementById("tradeSizePL").value);
+      
+      if (!entryPrice || !exitPrice || !tradeSize) {
+          document.getElementById("profitLossResult").innerText = "Please enter valid values.";
+          return;
+      }
+      
+      let pipFactor, pipValuePerLot;
+      if (instrumentType === "forex") {
+          pipFactor = 0.0001;
+          if (instrument.includes("JPY")) {
+              pipFactor = 0.01;
+          }
+          pipValuePerLot = 10;
+      } else if (instrumentType === "indices" || instrumentType === "metals") {
+          pipFactor = 1;
+          pipValuePerLot = 1;
+      }
+      
+      const pipsDiff = (exitPrice - entryPrice) / pipFactor;
+      const profitLoss = pipsDiff * tradeSize * pipValuePerLot;
+      document.getElementById("profitLossResult").innerText = `Profit/Loss: ${profitLoss.toFixed(2)} units`;
+  }
+  
+  // 7. Swap Calculator
+  function calculateSwap() {
+      const tradeSize = parseFloat(document.getElementById("tradeSizeSwap").value);
+      const swapRate = parseFloat(document.getElementById("swapRate").value);
+      const daysHeld = parseFloat(document.getElementById("daysHeld").value);
+      
+      if (!tradeSize || tradeSize <= 0 || !swapRate || !daysHeld || daysHeld <= 0) {
+          document.getElementById("swapResult").innerText = "Please enter valid values.";
+          return;
+      }
+      
+      const totalSwap = tradeSize * swapRate * daysHeld;
+      document.getElementById("swapResult").innerText = `Total Swap: ${totalSwap.toFixed(2)} units`;
+  }
+  
+  // 8. Break-even Calculator
+  function calculateBreakEven() {
+      const instrumentType = document.getElementById("instrumentTypeBE").value;
+      const instrument = document.getElementById("instrumentBE").value;
+      const entryPrice = parseFloat(document.getElementById("entryPriceBE").value);
+      const spreadPips = parseFloat(document.getElementById("spreadPipsBE").value);
+      const commission = parseFloat(document.getElementById("commissionBE").value);
+      const tradeSize = parseFloat(document.getElementById("tradeSizeBE").value);
+      
+      if (!entryPrice || !spreadPips || !commission || !tradeSize) {
+          document.getElementById("breakEvenResult").innerText = "Please enter valid values.";
+          return;
+      }
+      
+      let pipFactor, pipValuePerLot;
+      if (instrumentType === "forex") {
+          pipFactor = 0.0001;
+          if (instrument.includes("JPY")) {
+              pipFactor = 0.01;
+          }
+          pipValuePerLot = 10;
+      } else if (instrumentType === "indices" || instrumentType === "metals") {
+          pipFactor = 1;
+          pipValuePerLot = 1;
+      }
+      
+      const costPerPip = tradeSize * pipValuePerLot;
+      const commissionPips = commission / costPerPip;
+      const breakEvenPrice = entryPrice + (spreadPips * pipFactor) + (commissionPips * pipFactor);
+      document.getElementById("breakEvenResult").innerText = `Break-even Price: ${breakEvenPrice.toFixed(5)}`;
+  }
+  
+  // 9. Spread Calculator
+  function calculateSpreadCost() {
+      const instrumentType = document.getElementById("instrumentTypeSP").value;
+      const instrument = document.getElementById("instrumentSP").value;
+      const spreadPips = parseFloat(document.getElementById("spreadPipsSP").value);
+      const tradeSize = parseFloat(document.getElementById("tradeSizeSP").value);
+      
+      if (!spreadPips || spreadPips <= 0 || !tradeSize || tradeSize <= 0) {
+          document.getElementById("spreadResult").innerText = "Please enter valid values.";
+          return;
+      }
+      
+      let pipValuePerLot;
+      if (instrumentType === "forex") {
+          pipValuePerLot = 10;
+          if (instrument.includes("JPY")) {
+              pipValuePerLot /= 100;
+          }
+      } else if (instrumentType === "indices" || instrumentType === "metals") {
+          pipValuePerLot = 1;
+      }
+      
+      const spreadCost = spreadPips * tradeSize * pipValuePerLot;
+      document.getElementById("spreadResult").innerText = `Spread Cost: ${spreadCost.toFixed(2)} units`;
+  }
+  </script>
+  
+{% endblock content %}

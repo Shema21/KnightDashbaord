@@ -1,0 +1,185 @@
+<nav class="layout-navbar container-xxl navbar-detached navbar navbar-expand-xl align-items-center bg-navbar-theme"
+  id="layout-navbar">
+
+
+  <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0   d-xl-none ">
+    <a class="nav-item nav-link px-0 me-xl-6" href="javascript:void(0)">
+      <i class="icon-base bx bx-menu icon-md"></i>
+    </a>
+  </div>
+
+  <div class="navbar-nav-right d-flex align-items-center justify-content-end" id="navbar-collapse">
+
+
+
+    <ul class="navbar-nav flex-row align-items-center ms-md-auto">
+      <!-- Language -->
+      <li class="nav-item dropdown-language dropdown me-2 me-xl-0">
+        <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+          <i class="icon-base bx bx-globe icon-md"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <a class="dropdown-item" href="javascript:void(0);" data-language="en" data-text-direction="ltr">
+              <span>English</span>
+            </a>
+          </li>
+          <!-- <li>
+            <a class="dropdown-item" href="javascript:void(0);" data-language="fr" data-text-direction="ltr">
+              <span>French</span>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="javascript:void(0);" data-language="ar" data-text-direction="rtl">
+              <span>Arabic</span>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="javascript:void(0);" data-language="de" data-text-direction="ltr">
+              <span>German</span>
+            </a>
+          </li> -->
+        </ul>
+      </li>
+      <!--/ Language -->
+
+      <!-- Style Switcher -->
+      <li class="nav-item dropdown me-2 me-xl-0">
+        <a class="nav-link dropdown-toggle hide-arrow" id="nav-theme" href="javascript:void(0);"
+          data-bs-toggle="dropdown">
+          <i class="icon-base bx bx-sun icon-md theme-icon-active"></i>
+          <span class="d-none ms-2" id="nav-theme-text">Toggle theme</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-theme-text">
+          <li>
+            <button type="button" class="dropdown-item align-items-center active" data-bs-theme-value="light"
+              aria-pressed="false">
+              <span><i class="icon-base bx bx-sun icon-md me-3" data-icon="sun"></i>Light</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item align-items-center" data-bs-theme-value="dark"
+              aria-pressed="true">
+              <span><i class="icon-base bx bx-moon icon-md me-3" data-icon="moon"></i>Dark</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item align-items-center" data-bs-theme-value="system"
+              aria-pressed="false">
+              <span><i class="icon-base bx bx-desktop icon-md me-3" data-icon="desktop"></i>System</span>
+            </button>
+          </li>
+        </ul>
+      </li>
+      <!-- / Style Switcher-->
+
+      <!-- Notification -->
+      <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-2">
+        <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown"
+          data-bs-auto-close="outside" aria-expanded="false">
+          <span class="position-relative">
+            <i class="icon-base bx bx-bell icon-md"></i>
+            <span class="badge rounded-pill bg-danger badge-dot badge-notifications border" style="display: none;"></span>
+          </span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end p-0">
+          <li class="dropdown-menu-header border-bottom">
+            <div class="dropdown-header d-flex align-items-center py-3">
+              <h6 class="mb-0 me-auto">MT5 Notifications</h6>
+              <div class="d-flex align-items-center h6 mb-0">
+                <span class="badge bg-label-primary me-2" style="display: none;">0 New</span>
+                <a href="javascript:void(0)" class="dropdown-notifications-all p-2" data-bs-toggle="tooltip"
+                  data-bs-placement="top" title="Mark all as read">
+                  <i class="icon-base bx bx-envelope-open text-heading"></i>
+                </a>
+              </div>
+            </div>
+          </li>
+          <li class="dropdown-notifications-list scrollable-container">
+            <ul class="list-group list-group-flush">
+              <!-- Notifications will be dynamically inserted here -->
+            </ul>
+          </li>
+          <li class="border-top">
+            <div class="d-grid p-4">
+              <a class="btn btn-primary btn-sm d-flex" href="javascript:void(0);" id="view-all-notifications">
+                <small class="align-middle">View all notifications</small>
+              </a>
+            </div>
+          </li>
+        </ul>
+      </li>
+      <!--/ Notification -->
+      <!-- User -->
+      <li class="nav-item navbar-dropdown dropdown-user dropdown">
+        <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
+          <div class="avatar avatar-online">
+            <img src="/static/assets/uploads/avatars/darkone.png" alt class="rounded-circle" />
+          </div>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <a class="dropdown-item" href="ProfileDetails">
+              <div class="d-flex">
+                <div class="flex-shrink-0 me-3">
+                  <div class="avatar avatar-online">
+                    <img src="/static/assets/uploads/avatars/darkone.png" alt
+                      class="w-px-40 h-auto rounded-circle" />
+                  </div>
+                </div>
+                <div class="flex-grow-1">
+                  <h6 class="mb-0">{{ current_user.username }}
+                    {% if current_user.current_plan != 'free' %}
+                    <!-- Verified Badge Icon -->
+                    <i class='bx bxs-badge-check verified-users-badge-text'></i>
+                    {% endif %}</h6>
+                    <small class="text-body-secondary">{{ current_user.user_type|capitalize }}</small>
+                </div>
+              </div>
+            </a>
+          </li>
+          <li>
+            <div class="dropdown-divider my-1"></div>
+          </li>
+          <li>
+            <a class="dropdown-item" href="Managed-Accounts"> <i
+                class="icon-base bx bx-trending-up icon-md me-3"></i><span>Accounts</span> </a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="/Client/request-verification"> 
+              <i class="icon-base bx bxs-badge-check icon-md me-3"></i><span>Request Verification on Community</span> </a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="payment-page"> <i
+                class="icon-base bx bx-pie-chart-alt icon-md me-3"></i><span>Upgrade</span> </a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="ProfileDetails"> <i class="icon-base bx bx-user icon-md me-3"></i><span>My
+                Profile</span> </a>
+          </li>
+          <li>
+            <div class="dropdown-divider my-1"></div>
+          </li>
+          <!-- <li>
+            <a class="dropdown-item" href="Pricing"> <i
+                class="icon-base bx bx-dollar icon-md me-3"></i><span>Pricing</span> </a>
+          </li> -->
+          <li>
+            <a class="dropdown-item" href="FAQ"> <i
+                class="icon-base bx bx-help-circle icon-md me-3"></i><span>FAQ</span> </a>
+          </li>
+          <li>
+            <div class="dropdown-divider my-1"></div>
+          </li>
+          <li>
+            <a class="dropdown-item" href="{{ url_for('authentication_blueprint.logout') }}"> <i
+                class="icon-base bx bx-power-off icon-md me-3"></i><span>Log Out</span> </a>
+          </li>
+        </ul>
+      </li>
+      <!--/ User -->
+
+    </ul>
+  </div>
+
+</nav>
